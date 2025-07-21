@@ -199,36 +199,36 @@ function App() {
           </div>
 
           {/* Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
-              <CardContent className="p-6 text-center">
-                <Users className="w-8 h-8 text-yellow-400 mx-auto mb-3" />
-                <h4 className="font-bold text-yellow-400 mb-2">350 Únicos</h4>
-                <p className="text-sm text-white/70">Comunidade exclusiva limitada</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <Card className="fluorescent-card">
+              <CardContent className="p-8 text-center">
+                <Users className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
+                <h3 className="text-2xl font-bold text-yellow-400 mb-2">350 Únicos</h3>
+                <p className="text-white/70">Comunidade exclusiva limitada</p>
               </CardContent>
             </Card>
-            
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
-              <CardContent className="p-6 text-center">
-                <DollarSign className="w-8 h-8 text-yellow-400 mx-auto mb-3" />
-                <h4 className="font-bold text-yellow-400 mb-2">Renda Passiva</h4>
-                <p className="text-sm text-white/70">6-10% ROI anual projetado</p>
+
+            <Card className="fluorescent-card">
+              <CardContent className="p-8 text-center">
+                <DollarSign className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
+                <h3 className="text-2xl font-bold text-yellow-400 mb-2">Renda Passiva</h3>
+                <p className="text-white/70">6-10% ROI anual projetado</p>
               </CardContent>
             </Card>
-            
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
-              <CardContent className="p-6 text-center">
-                <Gift className="w-8 h-8 text-yellow-400 mx-auto mb-3" />
-                <h4 className="font-bold text-yellow-400 mb-2">Benefícios VIP</h4>
-                <p className="text-sm text-white/70">Acesso vitalício e brindes</p>
+
+            <Card className="fluorescent-card">
+              <CardContent className="p-8 text-center">
+                <Gift className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
+                <h3 className="text-2xl font-bold text-yellow-400 mb-2">Benefícios VIP</h3>
+                <p className="text-white/70">Acesso vitalício e brindes</p>
               </CardContent>
             </Card>
-            
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
-              <CardContent className="p-6 text-center">
-                <BarChart3 className="w-8 h-8 text-yellow-400 mx-auto mb-3" />
-                <h4 className="font-bold text-yellow-400 mb-2">Transparência</h4>
-                <p className="text-sm text-white/70">Dashboard público em tempo real</p>
+
+            <Card className="fluorescent-card">
+              <CardContent className="p-8 text-center">
+                <BarChart3 className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
+                <h3 className="text-2xl font-bold text-yellow-400 mb-2">Transparência</h3>
+                <p className="text-white/70">Dashboard público em tempo real</p>
               </CardContent>
             </Card>
           </div>
@@ -237,7 +237,7 @@ function App() {
             <Button 
               onClick={() => scrollToSection('mint')}
               size="lg" 
-              className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-lg px-8 py-4"
+              className="fluorescent-button bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-lg px-8 py-4"
             >
               MINT AGORA - $300
             </Button>
@@ -245,7 +245,7 @@ function App() {
               onClick={() => scrollToSection('about')}
               variant="outline" 
               size="lg" 
-              className="border-white/30 text-white hover:bg-white/10 text-lg px-8 py-4"
+              className="fluorescent-button border-white/30 text-white hover:bg-white/10 text-lg px-8 py-4"
             >
               Saiba Mais
             </Button>
@@ -419,7 +419,7 @@ function App() {
                         <Button
                           onClick={connectWallet}
                           disabled={web3Loading}
-                          className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
+                          className="fluorescent-button w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
                           size="lg"
                         >
                           <Wallet className="w-4 h-4 mr-2" />
@@ -429,7 +429,7 @@ function App() {
                         <Button
                           onClick={handleMint}
                           disabled={isMinting || contractLoading || !canMint(quantity, userMintedCount)}
-                          className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                          className="fluorescent-button w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
                           size="lg"
                         >
                           {isMinting ? 'Mintando...' : `Mint ${quantity} NFT${quantity > 1 ? 's' : ''}`}
@@ -499,7 +499,7 @@ function App() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="benefit-card benefit-card-green">
+            <Card className="fluorescent-card">
               <CardContent className="p-8">
                 <DollarSign className="w-12 h-12 text-green-400 mb-4" />
                 <h3 className="text-xl font-bold mb-4">Renda Passiva</h3>
@@ -510,7 +510,7 @@ function App() {
               </CardContent>
             </Card>
 
-            <Card className="benefit-card benefit-card-purple">
+            <Card className="fluorescent-card">
               <CardContent className="p-8">
                 <Award className="w-12 h-12 text-purple-400 mb-4" />
                 <h3 className="text-xl font-bold mb-4">Acesso VIP</h3>
@@ -521,7 +521,7 @@ function App() {
               </CardContent>
             </Card>
 
-            <Card className="benefit-card benefit-card-yellow">
+            <Card className="fluorescent-card">
               <CardContent className="p-8">
                 <Gift className="w-12 h-12 text-yellow-400 mb-4" />
                 <h3 className="text-xl font-bold mb-4">Brindes Físicos</h3>
@@ -532,7 +532,7 @@ function App() {
               </CardContent>
             </Card>
 
-            <Card className="benefit-card benefit-card-blue">
+            <Card className="fluorescent-card">
               <CardContent className="p-8">
                 <BookOpen className="w-12 h-12 text-blue-400 mb-4" />
                 <h3 className="text-xl font-bold mb-4">Educação Premium</h3>
@@ -543,7 +543,7 @@ function App() {
               </CardContent>
             </Card>
 
-            <Card className="benefit-card benefit-card-orange">
+            <Card className="fluorescent-card">
               <CardContent className="p-8">
                 <Handshake className="w-12 h-12 text-orange-400 mb-4" />
                 <h3 className="text-xl font-bold mb-4">Networking Elite</h3>
@@ -554,7 +554,7 @@ function App() {
               </CardContent>
             </Card>
 
-            <Card className="benefit-card benefit-card-cyan">
+            <Card className="fluorescent-card">
               <CardContent className="p-8">
                 <Eye className="w-12 h-12 text-cyan-400 mb-4" />
                 <h3 className="text-xl font-bold mb-4">Transparência Total</h3>
@@ -576,7 +576,7 @@ function App() {
           </div>
 
           <div className="space-y-6">
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="fluorescent-card">
               <CardContent className="p-8">
                 <h3 className="text-xl font-bold mb-4">Como funciona a renda passiva?</h3>
                 <p className="text-white/70">
@@ -586,7 +586,7 @@ function App() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="fluorescent-card">
               <CardContent className="p-8">
                 <h3 className="text-xl font-bold mb-4">Os benefícios são realmente vitalícios?</h3>
                 <p className="text-white/70">
@@ -596,7 +596,7 @@ function App() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="fluorescent-card">
               <CardContent className="p-8">
                 <h3 className="text-xl font-bold mb-4">Como posso acompanhar as operações?</h3>
                 <p className="text-white/70">
@@ -606,7 +606,7 @@ function App() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="fluorescent-card">
               <CardContent className="p-8">
                 <h3 className="text-xl font-bold mb-4">Qual a diferença para outras NFTs?</h3>
                 <p className="text-white/70">
@@ -616,7 +616,7 @@ function App() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="fluorescent-card">
               <CardContent className="p-8">
                 <h3 className="text-xl font-bold mb-4">Posso vender minha NFT depois?</h3>
                 <p className="text-white/70">
@@ -640,7 +640,7 @@ function App() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="fluorescent-card">
               <CardContent className="p-8">
                 <Badge className="bg-green-500/20 text-green-400 mb-4">Q1 2024 - CONCLUÍDO</Badge>
                 <h3 className="text-xl font-bold mb-4">Lançamento</h3>
@@ -653,7 +653,7 @@ function App() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="fluorescent-card">
               <CardContent className="p-8">
                 <Badge className="bg-yellow-500/20 text-yellow-400 mb-4">Q2 2024 - EM ANDAMENTO</Badge>
                 <h3 className="text-xl font-bold mb-4">Expansão</h3>
@@ -666,7 +666,7 @@ function App() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="fluorescent-card">
               <CardContent className="p-8">
                 <Badge className="bg-blue-500/20 text-blue-400 mb-4">Q3 2024 - PLANEJADO</Badge>
                 <h3 className="text-xl font-bold mb-4">Inovação</h3>
@@ -679,7 +679,7 @@ function App() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="fluorescent-card">
               <CardContent className="p-8">
                 <Badge className="bg-purple-500/20 text-purple-400 mb-4">Q4 2024 - FUTURO</Badge>
                 <h3 className="text-xl font-bold mb-4">Evolução</h3>

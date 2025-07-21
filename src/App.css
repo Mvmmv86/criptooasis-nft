@@ -133,28 +133,17 @@
   transition: all 0.3s ease;
 }
 
-/* Card hover effects */
-.card-hover {
-  position: relative;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.card-hover:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
-/* Benefit cards with gradient borders */
-.benefit-card {
+/* Universal fluorescent hover effect for all cards */
+.fluorescent-card {
   position: relative;
   transition: all 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
+  overflow: hidden;
 }
 
-.benefit-card::before {
+.fluorescent-card::before {
   content: '';
   position: absolute;
   top: -2px;
@@ -162,51 +151,82 @@
   right: -2px;
   bottom: -2px;
   background: linear-gradient(45deg, 
-    #10b981, /* green */
-    #8b5cf6, /* purple */
-    #f59e0b, /* yellow */
-    #3b82f6, /* blue */
-    #f97316, /* orange */
-    #06b6d4  /* cyan */
+    #ff00ff, /* magenta */
+    #00ffff, /* cyan */
+    #ff0080, /* pink */
+    #8000ff, /* purple */
+    #ff4000, /* orange */
+    #00ff40, /* green */
+    #4000ff, /* blue */
+    #ff0040  /* red */
   );
+  background-size: 400% 400%;
   border-radius: inherit;
   z-index: -1;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: all 0.3s ease;
+  animation: fluorescent-flow 3s ease-in-out infinite;
 }
 
-.benefit-card:hover::before {
+.fluorescent-card:hover::before {
+  opacity: 1;
+  filter: blur(0px);
+}
+
+.fluorescent-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(255, 0, 255, 0.3),
+    0 0 40px rgba(0, 255, 255, 0.2);
+}
+
+/* Fluorescent animation */
+@keyframes fluorescent-flow {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Fluorescent button effect */
+.fluorescent-button {
+  position: relative;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.fluorescent-button::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, 
+    #ff00ff, #00ffff, #ff0080, #8000ff,
+    #ff4000, #00ff40, #4000ff, #ff0040
+  );
+  background-size: 400% 400%;
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: all 0.3s ease;
+  animation: fluorescent-flow 2s ease-in-out infinite;
+}
+
+.fluorescent-button:hover::before {
   opacity: 1;
 }
 
-.benefit-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
-/* Specific colors for each benefit card */
-.benefit-card-green::before {
-  background: linear-gradient(45deg, #10b981, #059669, #047857);
-}
-
-.benefit-card-purple::before {
-  background: linear-gradient(45deg, #8b5cf6, #7c3aed, #6d28d9);
-}
-
-.benefit-card-yellow::before {
-  background: linear-gradient(45deg, #f59e0b, #d97706, #b45309);
-}
-
-.benefit-card-blue::before {
-  background: linear-gradient(45deg, #3b82f6, #2563eb, #1d4ed8);
-}
-
-.benefit-card-orange::before {
-  background: linear-gradient(45deg, #f97316, #ea580c, #dc2626);
-}
-
-.benefit-card-cyan::before {
-  background: linear-gradient(45deg, #06b6d4, #0891b2, #0e7490);
+.fluorescent-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 5px 15px rgba(0, 0, 0, 0.3),
+    0 0 15px rgba(255, 0, 255, 0.4),
+    0 0 30px rgba(0, 255, 255, 0.3);
 }
 
 /* Progress bar animation */
