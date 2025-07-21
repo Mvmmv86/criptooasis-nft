@@ -1,0 +1,43 @@
+{
+  "name": "criptooasis-nft-contracts",
+  "version": "1.0.0",
+  "description": "Smart contracts for CriptoOasis Genesis NFT collection",
+  "main": "hardhat.config.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:localhost": "hardhat run contracts/deploy.js --network localhost",
+    "deploy:goerli": "hardhat run contracts/deploy.js --network goerli",
+    "deploy:sepolia": "hardhat run contracts/deploy.js --network sepolia",
+    "deploy:mainnet": "hardhat run contracts/deploy.js --network mainnet",
+    "verify:goerli": "hardhat verify --network goerli",
+    "verify:sepolia": "hardhat verify --network sepolia",
+    "verify:mainnet": "hardhat verify --network mainnet",
+    "node": "hardhat node",
+    "clean": "hardhat clean",
+    "size": "hardhat size-contracts",
+    "gas-report": "REPORT_GAS=true hardhat test"
+  },
+  "keywords": [
+    "nft",
+    "ethereum",
+    "solidity",
+    "hardhat",
+    "erc721",
+    "criptooasis"
+  ],
+  "author": "CriptoOasis Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@openzeppelin/contracts": "^5.0.0",
+    "dotenv": "^16.3.1",
+    "hardhat": "^2.19.0",
+    "hardhat-contract-sizer": "^2.10.0",
+    "hardhat-gas-reporter": "^1.0.9"
+  },
+  "dependencies": {
+    "ethers": "^6.8.0"
+  }
+}
+
