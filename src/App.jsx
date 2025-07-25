@@ -1,13 +1,11 @@
-import {useState, useEffect, useCallback} from 'react';
+import {useState, useEffect} from 'react';
 import { Button } from '@/components/ui/button.jsx';
 import { Card, CardContent } from '@/components/ui/card.jsx';
 import { Badge } from '@/components/ui/badge.jsx';
-import { Wallet, Minus, Plus, ExternalLink, Twitter, MessageCircle, Globe, Users, DollarSign, Gift, BarChart3, Shield, TrendingUp, Award, BookOpen, Handshake, Eye } from 'lucide-react';
+import { Minus, Plus, Twitter, MessageCircle, Globe, Users, DollarSign, Gift, BarChart3, TrendingUp, Award, BookOpen, Handshake, Eye } from 'lucide-react';
 import './App.css';
 import {ConnectButton, ClaimButton, lightTheme} from "thirdweb/react";
-import { sepolia } from "thirdweb/chains";
 import {useThierdweb} from "@/hooks/useThierdweb.js";
-import { getContract } from "thirdweb";
 import { getTotalClaimedSupply, getTotalUnclaimedSupply, getActiveClaimCondition, balanceOf} from "thirdweb/extensions/erc721";
 import {useCountdown} from "@/hooks/useCountdown.js";
 
@@ -20,7 +18,6 @@ function App() {
   const [totalUnclaimedSupply, setTotalUnclaimedSupply] = useState(0);
   const [totalSupply, setTotalSupply] = useState(0);
   const [claimConditions, setClaimConditions] = useState({});
-  const [isConnected, setIsConnected] = useState(false);
   const [userMintedCount, setUserMintedCount] = useState(0);
   const [success, setSuccess] = useState(false);
 
@@ -55,10 +52,6 @@ function App() {
   }
 
   const [quantity, setQuantity] = useState(1);
-  const [isMinting, setIsMinting] = useState(false);
-  const [mintError, setMintError] = useState('');
-  const [mintSuccess, setMintSuccess] = useState('');
-  const [txHash, setTxHash] = useState('');
   const [error, setError] = useState(null);
 
   // Smooth scroll function
@@ -67,37 +60,6 @@ function App() {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
-  };
-
-  const handleMint = async () => {
-    // if (!isConnected) {
-    //   setMintError('Por favor, conecte sua wallet primeiro');
-    //   return;
-    // }
-
-    // if (!canMint(quantity, userMintedCount)) {
-    //   setMintError('Quantidade inválida ou limite excedido');
-    //   return;
-    // }
-
-    setIsMinting(true);
-    setMintError('');
-    setMintSuccess('');
-
-    // try {
-    //   const result = await mintNFT(quantity);
-    //   setTxHash(result.hash);
-    //   setMintSuccess(`Mint realizado com sucesso! ${quantity} NFT(s) mintado(s).`);
-    //
-    //   // Update user minted count
-    //   const newCount = await getMintedByWallet(account);
-    //   setUserMintedCount(newCount);
-    // } catch (error) {
-    //   console.error('Erro no mint:', error);
-    //   setMintError(error.message || 'Erro ao realizar mint');
-    // } finally {
-    //   setIsMinting(false);
-    // }
   };
 
   const increaseQuantity = () => {
@@ -146,11 +108,13 @@ function App() {
               <Globe size={20} />
             </a>
 
-            <div><ConnectButton client={client} theme={lightTheme({
-              colors: {
-                modalBg: "white",
-              },
-            })} chain={sepolia} /></div>
+            {contract && (
+                <div><ConnectButton client={client} theme={lightTheme({
+                  colors: {
+                    modalBg: "white",
+                  },
+                })} chain={contract.chain}/></div>
+            )}
           </div>
         </div>
       </nav>
@@ -416,28 +380,31 @@ function App() {
                             colors: {
                               modalBg: "white",
                             },
-                          })} chain={sepolia}/></div>
+                          })} chain={contract.chain}/></div>
                       ) : (
-                          <div className="text-center">
-                              <ClaimButton
-                                  contractAddress={contract.address}
-                                  chain={sepolia}
-                                  client={client}
-                                  claimParams={{
-                                    type: "ERC721",
-                                    quantity: BigInt(quantity),
-                                  }}
-                                  onError={(err) => {
-                                    setError(err.message);
-                                    console.log(err);
-                                  }}
-                                  onTransactionConfirmed={() => {
-                                    setSuccess(true);
-                                  }}
-                              >
-                                  Mint
-                              </ClaimButton>
-                          </div>
+                          contract &&
+                              (
+                                  <div className="text-center">
+                                    <ClaimButton
+                                        contractAddress={contract.address}
+                                        chain={contract.chain}
+                                        client={client}
+                                        claimParams={{
+                                          type: "ERC721",
+                                          quantity: BigInt(quantity),
+                                        }}
+                                        onError={(err) => {
+                                          setError(err.message);
+                                          console.log(err);
+                                        }}
+                                        onTransactionConfirmed={() => {
+                                          setSuccess(true);
+                                        }}
+                                    >
+                                      Mint
+                                    </ClaimButton>
+                                  </div>
+                              )
                       )}
 
                       {account && (
@@ -461,28 +428,6 @@ function App() {
                           <div className="mt-4 p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
                             <p className="text-green-300 text-sm">NFT mintada com sucesso!</p>
                           </div>
-                      )}
-
-                      {mintError && (
-                        <div className="mt-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
-                          <p className="text-red-300 text-sm">{mintError}</p>
-                        </div>
-                      )}
-
-                      {mintSuccess && (
-                        <div className="mt-4 p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
-                          <p className="text-green-300 text-sm">{mintSuccess}</p>
-                          {txHash && (
-                            <a
-                              href={`https://etherscan.io/tx/${txHash}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-green-300 hover:text-green-200 text-xs flex items-center mt-2"
-                            >
-                              Ver transação <ExternalLink className="w-3 h-3 ml-1" />
-                            </a>
-                          )}
-                        </div>
                       )}
                     </div>
                   </div>

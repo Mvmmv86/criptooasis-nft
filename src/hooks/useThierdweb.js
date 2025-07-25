@@ -1,18 +1,20 @@
 import {createThirdwebClient, getContract} from "thirdweb";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
-import {sepolia} from "thirdweb/chains";
+import {sepolia, ethereum} from "thirdweb/chains";
 
 export const useThierdweb = () => {
     const account = useActiveAccount();
 
+    const environments = import.meta.env;
+
     const client = createThirdwebClient({
-        clientId: "72c66260fe3da5277b59af3b5d1c3e0c" ,
-        secretKey: "iQiC4baW0gbAVFXVP645R4vUXEmgXrmkF3CeHvTOKln-HLEtVBSDT9XerEo3_omltaabskD128MmCA5Vijx1JA"
+        clientId: environments.VITE_THIRD_WEB_CLIENT_ID ,
+        secretKey: environments.VITE_THIRD_WEB_SECRET
     });
 
     const contract = getContract({
-        address: "0xecD23B7F4129523701708302877Ea49434EeCebB",
-        chain: sepolia,
+        address: environments.VITE_CONTRACT_ADDRESS,
+        chain: environments.VITE_CHAIN_NAME === 'sepolia' ? sepolia : ethereum,
         client: client,
     });
 
