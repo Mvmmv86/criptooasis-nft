@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 import { useWeb3 } from './useWeb3';
 
 // Endereço do contrato (será atualizado após deploy)
-const CONTRACT_ADDRESS = "0x0000000000000000000000000000000000000000"; // Placeholder
+const CONTRACT_ADDRESS = "0x074714bdA7475235791258434Fb5737Fdc54b9d4"; // Placeholder
 
 // ABI do contrato NFT
 const CONTRACT_ABI = [
@@ -12,7 +12,8 @@ const CONTRACT_ABI = [
     "function remainingSupply() external view returns (uint256)",
     "function MINT_PRICE() external view returns (uint256)",
     "function MAX_PER_WALLET() external view returns (uint256)",
-    "function MAX_SUPPLY() external view returns (uint256)",
+    "function maxTotalSupply() external view returns (uint256)",
+    "function totalCount() external view returns (uint256)",
     "function mintingActive() external view returns (bool)",
     "function mintedByWallet(address) external view returns (uint256)",
     "function canMint(address wallet, uint256 quantity) external view returns (bool)",
@@ -20,7 +21,8 @@ const CONTRACT_ABI = [
     "function toggleMinting() external",
     "function emergencyWithdraw() external",
     "event NFTMinted(address indexed to, uint256 tokenId, uint256 quantity)",
-    "event MintingStatusChanged(bool active)"
+    "event MintingStatusChanged(bool active)",
+    "function claimCondition() view returns (uint256 currentStartId, uint256 count)"
 ];
 
 export const useContract = () => {
@@ -46,6 +48,7 @@ export const useContract = () => {
                     CONTRACT_ABI,
                     signer || provider
                 );
+
                 setContract(contractInstance);
             } catch (error) {
                 console.error("Erro ao criar contrato:", error);
@@ -74,27 +77,29 @@ export const useContract = () => {
             
             const [
                 totalSupply,
-                remainingSupply,
-                mintPrice,
-                maxPerWallet,
+                // remainingSupply,
+                // mintPrice,
+                // maxPerWallet,
                 maxSupply,
-                mintingActive
+                // mintingActive
             ] = await Promise.all([
                 contract.totalSupply(),
-                contract.remainingSupply(),
-                contract.MINT_PRICE(),
-                contract.MAX_PER_WALLET(),
-                contract.MAX_SUPPLY(),
-                contract.mintingActive()
+                // contract.remainingSupply(),
+                // contract.MINT_PRICE(),
+                // contract.MAX_PER_WALLET(),
+                contract.totalCount(),
+                // contract.mintingActive()
             ]);
+
+            console.log(maxSupply);
 
             setContractData({
                 totalSupply: Number(totalSupply),
-                remainingSupply: Number(remainingSupply),
-                mintPrice: ethers.formatEther(mintPrice),
-                maxPerWallet: Number(maxPerWallet),
+                // remainingSupply: Number(remainingSupply),
+                // mintPrice: ethers.formatEther(mintPrice),
+                // maxPerWallet: Number(maxPerWallet),
                 maxSupply: Number(maxSupply),
-                mintingActive
+                // mintingActive
             });
         } catch (error) {
             console.error("Erro ao buscar dados do contrato:", error);
@@ -160,7 +165,7 @@ export const useContract = () => {
     // Verificar se pode mintar
     const canMint = useCallback(async (walletAddress, quantity) => {
         if (!contract || !walletAddress) return false;
-        
+        return false;
         try {
             return await contract.canMint(walletAddress, quantity);
         } catch (error) {

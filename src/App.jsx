@@ -1,57 +1,65 @@
-import { useState, useEffect } from 'react';
+import {useState, useEffect, useCallback} from 'react';
 import { Button } from '@/components/ui/button.jsx';
 import { Card, CardContent } from '@/components/ui/card.jsx';
 import { Badge } from '@/components/ui/badge.jsx';
 import { Wallet, Minus, Plus, ExternalLink, Twitter, MessageCircle, Globe, Users, DollarSign, Gift, BarChart3, Shield, TrendingUp, Award, BookOpen, Handshake, Eye } from 'lucide-react';
-import { useWeb3 } from './hooks/useWeb3';
-import { useContract } from './hooks/useContract';
 import './App.css';
+import {ConnectButton, ClaimButton, lightTheme} from "thirdweb/react";
+import { sepolia } from "thirdweb/chains";
+import {useThierdweb} from "@/hooks/useThierdweb.js";
+import { getContract } from "thirdweb";
+import { getTotalClaimedSupply, getTotalUnclaimedSupply, getActiveClaimCondition, balanceOf} from "thirdweb/extensions/erc721";
+import {useCountdown} from "@/hooks/useCountdown.js";
 
 function App() {
-  const { account, isConnected, connectWallet, disconnectWallet, isLoading: web3Loading, error: web3Error } = useWeb3();
-  const { contractData, mintNFT, canMint, getMintedByWallet, isLoading: contractLoading } = useContract();
-  
+  const { days, hours, minutes, seconds } = useCountdown({ initialDays: 6, initialHours: 23, initialMinutes: 59, initialSeconds: 58 });
+
+  const {client, account, contract} = useThierdweb();
+
+  const [totalClaimedSupply, setTotalClaimedSupply] = useState(0);
+  const [totalUnclaimedSupply, setTotalUnclaimedSupply] = useState(0);
+  const [totalSupply, setTotalSupply] = useState(0);
+  const [claimConditions, setClaimConditions] = useState({});
+  const [isConnected, setIsConnected] = useState(false);
+  const [userMintedCount, setUserMintedCount] = useState(0);
+  const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+      if(!contract) {
+          return;
+      }
+
+      loadData();
+  }, [success]);
+
+  useEffect(() => {
+    if(!account) {
+      return;
+    }
+    (async () => {
+      const mintedCount = await balanceOf({ contract, owner: account.address });
+
+      setUserMintedCount(Number(mintedCount));
+    })();
+  }, [account, success]);
+
+  const loadData  = async() => {
+    const totalClaimedSupply = await getTotalClaimedSupply({ contract });
+    const totalUnclaimedSupply = await getTotalUnclaimedSupply({ contract });
+    const claimCondition = await getActiveClaimCondition({ contract });
+
+    setTotalClaimedSupply(Number(totalClaimedSupply));
+    setTotalUnclaimedSupply(Number(totalUnclaimedSupply));
+    setTotalSupply(Number(totalClaimedSupply) + Number(totalUnclaimedSupply));
+    setClaimConditions(claimCondition);
+  }
+
   const [quantity, setQuantity] = useState(1);
   const [isMinting, setIsMinting] = useState(false);
   const [mintError, setMintError] = useState('');
   const [mintSuccess, setMintSuccess] = useState('');
   const [txHash, setTxHash] = useState('');
-  const [userMintedCount, setUserMintedCount] = useState(0);
-  const [timeLeft, setTimeLeft] = useState({
-    days: 6,
-    hours: 23,
-    minutes: 59,
-    seconds: 58
-  });
-
-  // Countdown timer
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        let { days, hours, minutes, seconds } = prev;
-        
-        if (seconds > 0) {
-          seconds--;
-        } else if (minutes > 0) {
-          minutes--;
-          seconds = 59;
-        } else if (hours > 0) {
-          hours--;
-          minutes = 59;
-          seconds = 59;
-        } else if (days > 0) {
-          days--;
-          hours = 23;
-          minutes = 59;
-          seconds = 59;
-        }
-        
-        return { days, hours, minutes, seconds };
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
+  const [error, setError] = useState(null);
 
   // Smooth scroll function
   const scrollToSection = (sectionId) => {
@@ -61,44 +69,35 @@ function App() {
     }
   };
 
-  // Get user minted count when connected
-  useEffect(() => {
-    if (isConnected && account) {
-      getMintedByWallet(account).then(count => {
-        setUserMintedCount(count);
-      });
-    }
-  }, [isConnected, account, getMintedByWallet]);
-
   const handleMint = async () => {
-    if (!isConnected) {
-      setMintError('Por favor, conecte sua wallet primeiro');
-      return;
-    }
+    // if (!isConnected) {
+    //   setMintError('Por favor, conecte sua wallet primeiro');
+    //   return;
+    // }
 
-    if (!canMint(quantity, userMintedCount)) {
-      setMintError('Quantidade inválida ou limite excedido');
-      return;
-    }
+    // if (!canMint(quantity, userMintedCount)) {
+    //   setMintError('Quantidade inválida ou limite excedido');
+    //   return;
+    // }
 
     setIsMinting(true);
     setMintError('');
     setMintSuccess('');
 
-    try {
-      const result = await mintNFT(quantity);
-      setTxHash(result.hash);
-      setMintSuccess(`Mint realizado com sucesso! ${quantity} NFT(s) mintado(s).`);
-      
-      // Update user minted count
-      const newCount = await getMintedByWallet(account);
-      setUserMintedCount(newCount);
-    } catch (error) {
-      console.error('Erro no mint:', error);
-      setMintError(error.message || 'Erro ao realizar mint');
-    } finally {
-      setIsMinting(false);
-    }
+    // try {
+    //   const result = await mintNFT(quantity);
+    //   setTxHash(result.hash);
+    //   setMintSuccess(`Mint realizado com sucesso! ${quantity} NFT(s) mintado(s).`);
+    //
+    //   // Update user minted count
+    //   const newCount = await getMintedByWallet(account);
+    //   setUserMintedCount(newCount);
+    // } catch (error) {
+    //   console.error('Erro no mint:', error);
+    //   setMintError(error.message || 'Erro ao realizar mint');
+    // } finally {
+    //   setIsMinting(false);
+    // }
   };
 
   const increaseQuantity = () => {
@@ -146,15 +145,12 @@ function App() {
             <a href="#" className="text-white/70 hover:text-white transition-colors">
               <Globe size={20} />
             </a>
-            
-            <Button
-              onClick={isConnected ? disconnectWallet : connectWallet}
-              disabled={web3Loading}
-              className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
-            >
-              <Wallet className="w-4 h-4 mr-2" />
-              {web3Loading ? 'Conectando...' : isConnected ? `${account?.slice(0, 6)}...${account?.slice(-4)}` : 'Conectar Wallet'}
-            </Button>
+
+            <div><ConnectButton client={client} theme={lightTheme({
+              colors: {
+                modalBg: "white",
+              },
+            })} chain={sepolia} /></div>
           </div>
         </div>
       </nav>
@@ -180,19 +176,19 @@ function App() {
             <h3 className="text-lg text-white/60 mb-6">TEMPO RESTANTE PARA MINT ESPECIAL</h3>
             <div className="flex justify-center space-x-8">
               <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-yellow-400">{timeLeft.days.toString().padStart(2, '0')}</div>
+                <div className="text-4xl md:text-6xl font-bold text-yellow-400">{days.toString().padStart(2, '0')}</div>
                 <div className="text-sm text-white/60">Days</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-yellow-400">{timeLeft.hours.toString().padStart(2, '0')}</div>
+                <div className="text-4xl md:text-6xl font-bold text-yellow-400">{hours.toString().padStart(2, '0')}</div>
                 <div className="text-sm text-white/60">Hours</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-yellow-400">{timeLeft.minutes.toString().padStart(2, '0')}</div>
+                <div className="text-4xl md:text-6xl font-bold text-yellow-400">{minutes.toString().padStart(2, '0')}</div>
                 <div className="text-sm text-white/60">Minutes</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-yellow-400">{timeLeft.seconds.toString().padStart(2, '0')}</div>
+                <div className="text-4xl md:text-6xl font-bold text-yellow-400">{seconds.toString().padStart(2, '0')}</div>
                 <div className="text-sm text-white/60">Seconds</div>
               </div>
             </div>
@@ -362,15 +358,15 @@ function App() {
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
                   <span className="text-white/70">Mintados</span>
-                  <span className="font-bold">129 / 350</span>
+                  <span className="font-bold">{ totalClaimedSupply } / { totalSupply }</span>
                 </div>
                 
                 <div className="w-full bg-white/10 rounded-full h-2">
-                  <div className="bg-gradient-to-r from-green-500 to-emerald-600 h-2 rounded-full" style={{width: '37%'}}></div>
+                  <div className="bg-gradient-to-r from-green-500 to-emerald-600 h-2 rounded-full" style={{width: (totalClaimedSupply / totalSupply) * 100 +'%'}}></div>
                 </div>
                 
                 <div className="text-center text-white/70">
-                  221 NFTs restantes
+                  { totalUnclaimedSupply } NFTs restantes
                 </div>
 
                 <div className="border-t border-white/10 pt-6">
@@ -395,7 +391,7 @@ function App() {
                         <span className="text-2xl font-bold w-8 text-center">{quantity}</span>
                         <Button
                           onClick={increaseQuantity}
-                          disabled={quantity >= 5 || quantity + userMintedCount >= 5}
+                          disabled={quantity >= 5 || quantity >= totalUnclaimedSupply}
                           variant="outline"
                           size="sm"
                           className="border-white/30 text-white hover:bg-white/10"
@@ -415,31 +411,39 @@ function App() {
                         </div>
                       </div>
 
-                      {!isConnected ? (
-                        <Button
-                          onClick={connectWallet}
-                          disabled={web3Loading}
-                          className="fluorescent-button w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
-                          size="lg"
-                        >
-                          <Wallet className="w-4 h-4 mr-2" />
-                          {web3Loading ? 'Conectando...' : 'Conectar Wallet'}
-                        </Button>
+                      {!account ? (
+                          <div className="text-center"><ConnectButton client={client} theme={lightTheme({
+                            colors: {
+                              modalBg: "white",
+                            },
+                          })} chain={sepolia}/></div>
                       ) : (
-                        <Button
-                          onClick={handleMint}
-                          disabled={isMinting || contractLoading || !canMint(quantity, userMintedCount)}
-                          className="fluorescent-button w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
-                          size="lg"
-                        >
-                          {isMinting ? 'Mintando...' : `Mint ${quantity} NFT${quantity > 1 ? 's' : ''}`}
-                        </Button>
+                          <div className="text-center">
+                              <ClaimButton
+                                  contractAddress={contract.address}
+                                  chain={sepolia}
+                                  client={client}
+                                  claimParams={{
+                                    type: "ERC721",
+                                    quantity: BigInt(quantity),
+                                  }}
+                                  onError={(err) => {
+                                    setError(err.message);
+                                    console.log(err);
+                                  }}
+                                  onTransactionConfirmed={() => {
+                                    setSuccess(true);
+                                  }}
+                              >
+                                  Mint
+                              </ClaimButton>
+                          </div>
                       )}
 
-                      {isConnected && (
+                      {account && (
                         <div className="mt-4 text-center">
                           <p className="text-sm text-white/70">
-                            Wallet conectada: {account?.slice(0, 6)}...{account?.slice(-4)}
+                            Wallet conectada: {account.address?.slice(0, 6)}...{account.address?.slice(-4)}
                           </p>
                           <p className="text-xs text-white/60">
                             Você já mintou: {userMintedCount}/5 NFTs
@@ -447,10 +451,16 @@ function App() {
                         </div>
                       )}
 
-                      {web3Error && (
+                      {error && (
                         <div className="mt-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
-                          <p className="text-red-300 text-sm">{web3Error}</p>
+                          <p className="text-red-300 text-sm">{error}</p>
                         </div>
+                      )}
+
+                      {success && (
+                          <div className="mt-4 p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
+                            <p className="text-green-300 text-sm">NFT mintada com sucesso!</p>
+                          </div>
                       )}
 
                       {mintError && (

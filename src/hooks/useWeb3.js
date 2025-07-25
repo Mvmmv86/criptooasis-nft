@@ -32,16 +32,16 @@ export const useWeb3 = () => {
             const network = await provider.getNetwork();
             
             // Verificar se está na rede correta (Ethereum Mainnet = 1)
-            if (network.chainId !== 1n) {
-                try {
-                    await ethereumProvider.request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: '0x1' }], // Ethereum Mainnet
-                    });
-                } catch (switchError) {
-                    throw new Error('Por favor, mude para a rede Ethereum Mainnet no MetaMask.');
-                }
-            }
+            // if (network.chainId !== 1n) {
+            //     try {
+            //         await ethereumProvider.request({
+            //             method: 'wallet_switchEthereumChain',
+            //             params: [{ chainId: '0x1' }], // Ethereum Mainnet
+            //         });
+            //     } catch (switchError) {
+            //         throw new Error('Por favor, mude para a rede Ethereum Mainnet no MetaMask.');
+            //     }
+            // }
             
             setProvider(provider);
             setSigner(signer);
