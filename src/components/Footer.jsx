@@ -15,13 +15,14 @@ const Footer = () => {
           <a href="#" className="text-white/70 hover:text-white transition-colors" aria-label="Twitter">
             <Twitter size={24} />
           </a>
-          <a href="#" className="text-white/70 hover:text-white transition-colors" aria-label="Telegram or Messaging App">
-            <MessageCircle size={24} />
+          <a href="#" className="text-white/70 hover:text-white transition-colors">
+            <img 
+              src="/icons/discord.png" 
+              alt="Discord" 
+              className="w-5 h-5 object-contain"
+            />
           </a>
-          <a href="#" className="text-white/70 hover:text-white transition-colors" aria-label="Website or Globe">
-            <Globe size={24} />
-          </a>
-        </div>
+                  </div>
 
         <p className="text-white/60 text-sm">
           © 2025 CriptoOasis Genesis. Todos os direitos reservados.
