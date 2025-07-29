@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ethers } from 'ethers';
-import { useWeb3 } from './useWeb3';
+import {useThierdweb} from "@/hooks/useThierdWeb.js";
 
 const environments = import.meta.env;
 
@@ -19,7 +19,8 @@ const CONTRACT_ABI = [
 ];
 
 export const useContract = () => {
-    const { signer, provider, account } = useWeb3();
+    const {account, signer} = useThierdweb();
+
     const [contract, setContract] = useState(null);
     const [contractData, setContractData] = useState({
         maxSupply: 0,
@@ -31,20 +32,22 @@ export const useContract = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        if (provider && CONTRACT_ADDRESS !== "0x0000000000000000000000000000000000000000") {
-            try {
-                const contractInstance = new ethers.Contract(
-                    CONTRACT_ADDRESS,
-                    CONTRACT_ABI,
-                    signer || provider
-                );
-                setContract(contractInstance);
-            } catch (error) {
-                console.error("Erro ao criar contrato:", error);
-                setError("Erro ao conectar com o contrato");
-            }
+        if (!signer) {
+            return;
         }
-    }, [signer, provider]);
+
+        try {
+            const contractInstance = new ethers.Contract(
+                CONTRACT_ADDRESS,
+                CONTRACT_ABI,
+                signer
+            );
+            setContract(contractInstance);
+        } catch (error) {
+            console.error("Erro ao criar contrato:", error);
+            setError("Erro ao conectar com o contrato");
+        }
+    }, [signer]);
 
     const fetchContractData = useCallback(async () => {
         if (!contract) {
@@ -53,7 +56,8 @@ export const useContract = () => {
 
         try {
             setIsLoading(true);
-            
+
+            console.log('Heree');
             const [
                 maxSupply,
                 currentSupply,
@@ -140,43 +144,13 @@ export const useContract = () => {
         
         try {
             const owner = await contract.owner();
-            return owner.toLowerCase() === account.toLowerCase();
+
+            return owner.toLowerCase() === account.address;
         } catch (error) {
             console.error("Erro ao verificar ownership:", error);
             return false;
         }
     }, [contract, account]);
-
-    const toggleMinting = useCallback(async () => {
-        if (!contract || !signer) {
-            throw new Error("Contrato ou signer não disponível");
-        }
-
-        try {
-            const transaction = await contract.toggleMinting();
-            await transaction.wait();
-            await fetchContractData(); // Atualizar dados
-            return transaction;
-        } catch (error) {
-            console.error("Erro ao alternar minting:", error);
-            throw error;
-        }
-    }, [contract, signer, fetchContractData]);
-
-    const withdrawFunds = useCallback(async () => {
-        if (!contract || !signer) {
-            throw new Error("Contrato ou signer não disponível");
-        }
-
-        try {
-            const transaction = await contract.emergencyWithdraw();
-            await transaction.wait();
-            return transaction;
-        } catch (error) {
-            console.error("Erro ao retirar fundos:", error);
-            throw error;
-        }
-    }, [contract, signer]);
 
     useEffect(() => {
         fetchContractData();
@@ -190,10 +164,9 @@ export const useContract = () => {
         mintNFT,
         getMintedByWallet,
         isOwner,
-        toggleMinting,
-        withdrawFunds,
         fetchContractData,
-        CONTRACT_ADDRESS
+        CONTRACT_ADDRESS,
+        isConnected: !!account
     };
 };
 

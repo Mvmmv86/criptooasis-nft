@@ -11,18 +11,21 @@ import NavLogo from './components/NavLogo';
 import Footer from './components/Footer';
 import './App.css';
 import {useCountdown} from "@/hooks/useCountdown.js";
+import {ConnectButton, ClaimButton, lightTheme} from "thirdweb/react"
+import {useThierdweb} from "@/hooks/useThierdweb.js";
 
 function App() {
-  const { account, isConnected, connectWallet, disconnectWallet, isLoading: web3Loading, error: web3Error } = useWeb3();
-  const { contractData, mintNFT, getMintedByWallet, isLoading: contractLoading } = useContract();
+  const { contractData, mintNFT, getMintedByWallet, isLoading: contractLoading, isConnected } = useContract();
   const timeLeft = useCountdown({ initialDays: 6, initialHours: 23, initialMinutes: 59, initialSeconds: 58 });
-  
+
   const [quantity, setQuantity] = useState(1);
   const [isMinting, setIsMinting] = useState(false);
   const [mintError, setMintError] = useState('');
   const [mintSuccess, setMintSuccess] = useState('');
   const [txHash, setTxHash] = useState('');
   const [userMintedCount, setUserMintedCount] = useState(0);
+
+  const {client, account, chain} = useThierdweb();
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
@@ -33,7 +36,7 @@ function App() {
 
   useEffect(() => {
     if (isConnected && account) {
-      getMintedByWallet(account).then(count => {
+      getMintedByWallet(account?.address).then(count => {
         setUserMintedCount(count);
       });
     }
@@ -54,7 +57,7 @@ function App() {
       setTxHash(result.hash);
       setMintSuccess(`Mint realizado com sucesso! ${quantity} NFT(s) mintado(s).`);
 
-      const newCount = await getMintedByWallet(account);
+      const newCount = await getMintedByWallet(account?.address);
       setUserMintedCount(newCount);
     } catch (error) {
       console.error('Erro no mint:', error);
@@ -115,30 +118,27 @@ function App() {
 
           <div className="flex items-center space-x-4">
             <a href="#" className="text-white/70 hover:text-white transition-colors">
-              <Twitter size={20} />
+              <Twitter size={20}/>
             </a>
             <a href="#" className="text-white/70 hover:text-white transition-colors">
-              <MessageCircle size={20} />
+              <MessageCircle size={20}/>
             </a>
             <a href="#" className="text-white/70 hover:text-white transition-colors">
-              <Globe size={20} />
+              <Globe size={20}/>
             </a>
-            
-            <Button
-              onClick={isConnected ? disconnectWallet : connectWallet}
-              disabled={web3Loading}
-              className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
-            >
-              <Wallet className="w-4 h-4 mr-2" />
-              {web3Loading ? 'Conectando...' : isConnected ? `${account?.slice(0, 6)}...${account?.slice(-4)}` : 'Conectar Wallet'}
-            </Button>
+
+            <div><ConnectButton client={client} theme={lightTheme({
+              colors: {
+                modalBg: "white",
+              },
+            })} chain={chain}/></div>
           </div>
         </div>
       </nav>
 
-      <section id="hero" className="pt-24 pb-16 px-4 relative overflow-hidden">
-        <div className="container mx-auto text-center max-w-5xl">
-          <div className="mb-6">
+        <section id="hero" className="pt-24 pb-16 px-4 relative overflow-hidden">
+          <div className="container mx-auto text-center max-w-5xl">
+            <div className="mb-6">
             <img
               src="public/logo/logo.png"
               alt="Cripto Oasis Logo"
@@ -381,20 +381,16 @@ function App() {
                       </div>
 
                       {!isConnected ? (
-                        <Button
-                          onClick={connectWallet}
-                          disabled={web3Loading}
-                          className="fluorescent-button w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
-                          size="lg"
-                        >
-                          <Wallet className="w-4 h-4 mr-2" />
-                          {web3Loading ? 'Conectando...' : 'Conectar Wallet'}
-                        </Button>
+                          <div className="text-center"><ConnectButton client={client} theme={lightTheme({
+                            colors: {
+                              modalBg: "white",
+                            },
+                          })} chain={chain}/></div>
                       ) : (
-                        <Button
-                          onClick={handleMint}
-                          disabled={isMinting || contractLoading || quantity + userMintedCount >= 5}
-                          className="fluorescent-button w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                          <Button
+                              onClick={handleMint}
+                              disabled={isMinting || contractLoading || quantity + userMintedCount >= 5}
+                              className="fluorescent-button w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
                           size="lg"
                         >
                           {isMinting ? 'Mintando...' : `Mint ${quantity} NFT${quantity > 1 ? 's' : ''}`}
@@ -402,42 +398,36 @@ function App() {
                       )}
 
                       {isConnected && (
-                        <div className="mt-4 text-center">
-                          <p className="text-sm text-white/70">
-                            Wallet conectada: {account?.slice(0, 6)}...{account?.slice(-4)}
-                          </p>
-                          <p className="text-xs text-white/60">
-                            Você já mintou: {userMintedCount}/5 NFTs
-                          </p>
-                        </div>
-                      )}
-
-                      {web3Error && (
-                        <div className="mt-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
-                          <p className="text-red-300 text-sm">{web3Error}</p>
-                        </div>
+                          <div className="mt-4 text-center">
+                            <p className="text-sm text-white/70">
+                              Wallet conectada: {account?.address?.slice(0, 6)}...{account?.address?.slice(-4)}
+                            </p>
+                            <p className="text-xs text-white/60">
+                              Você já mintou: {userMintedCount}/5 NFTs
+                            </p>
+                          </div>
                       )}
 
                       {mintError && (
-                        <div className="mt-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
-                          <p className="text-red-300 text-sm">{mintError}</p>
-                        </div>
+                          <div className="mt-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
+                            <p className="text-red-300 text-sm">{mintError}</p>
+                          </div>
                       )}
 
                       {mintSuccess && (
-                        <div className="mt-4 p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
-                          <p className="text-green-300 text-sm">{mintSuccess}</p>
-                          {txHash && (
-                            <a
-                              href={`https://etherscan.io/tx/${txHash}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-green-300 hover:text-green-200 text-xs flex items-center mt-2"
-                            >
-                              Ver transação <ExternalLink className="w-3 h-3 ml-1" />
-                            </a>
-                          )}
-                        </div>
+                          <div className="mt-4 p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
+                            <p className="text-green-300 text-sm">{mintSuccess}</p>
+                            {txHash && (
+                                <a
+                                    href={`https://etherscan.io/tx/${txHash}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-green-300 hover:text-green-200 text-xs flex items-center mt-2"
+                                >
+                                  Ver transação <ExternalLink className="w-3 h-3 ml-1"/>
+                                </a>
+                            )}
+                          </div>
                       )}
                     </div>
                   </div>
