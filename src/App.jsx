@@ -160,10 +160,11 @@ function App() {
               <Twitter size={20} />
             </a>
             <a href="#" className="text-white/70 hover:text-white transition-colors">
-              <MessageCircle size={20} />
-            </a>
-            <a href="#" className="text-white/70 hover:text-white transition-colors">
-              <Globe size={20} />
+              <img 
+                src="/icons/discord.png" 
+                alt="Discord" 
+                className="w-5 h-5 object-contain"
+              />
             </a>
             
             <Button
