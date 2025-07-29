@@ -2,7 +2,15 @@ import {useState, useEffect} from 'react';
 import { Button } from '@/components/ui/button.jsx';
 import { Card, CardContent } from '@/components/ui/card.jsx';
 import { Badge } from '@/components/ui/badge.jsx';
-import { Minus, Plus, Twitter, MessageCircle, Globe, Users, DollarSign, Gift, BarChart3, TrendingUp, Award, BookOpen, Handshake, Eye } from 'lucide-react';
+
+import { Wallet, Minus, Plus, ExternalLink, Twitter, MessageCircle, Globe, Users, DollarSign, Gift, BarChart3, Shield, TrendingUp, Award, BookOpen, Handshake, Eye } from 'lucide-react';
+import { useWeb3 } from './hooks/useWeb3';
+import { useContract } from './hooks/useContract';
+import ParticleBackground from './components/ParticleBackground'
+import RetrowaveGrid from './components/RetrowaveGrid'
+import NeonSun from './components/NeonSun'
+import NavLogo from './components/NavLogo';
+import Footer from './components/Footer';
 import './App.css';
 import {ConnectButton, ClaimButton, lightTheme} from "thirdweb/react";
 import {useThierdweb} from "@/hooks/useThierdweb.js";
@@ -78,16 +86,30 @@ function App() {
   const totalCostUSD = (300 * quantity).toFixed(2);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 text-white">
-      {/* Navigation */}
+    <div className="min-h-screen relative overflow-x-hidden ">
+      {/* Retrowave static background */}
+    <div
+      className="absolute inset-0 z-0"
+      style={{
+        backgroundImage: `
+          linear-gradient(to bottom, #06011a7e 10%, #2d1147be 50%, #06011aff 100%),
+          url('/images/retrowave-bg.jpg')
+        `,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'scroll', // faz a imagem acompanhar o scroll
+        backgroundRepeat: 'no-repeat',
+      }}
+    />
+          
+
+      {/* Animated backgrounds */}
+      <ParticleBackground />
+      <RetrowaveGrid />
+      <div className='relative z-10'>
       <nav className="fixed top-0 w-full z-50 bg-black/20 backdrop-blur-md border-b border-white/10">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center font-bold text-black">
-              CO
-            </div>
-            <span className="text-xl font-bold">CRIPTO OASIS</span>
-          </div>
+          <NavLogo />
           
           <div className="hidden md:flex space-x-6">
             <button onClick={() => scrollToSection('mint')} className="hover:text-yellow-400 transition-colors">Mint</button>
@@ -120,96 +142,86 @@ function App() {
       </nav>
 
       {/* Hero Section */}
-      <section id="hero" className="pt-24 pb-16 px-4">
-        <div className="container mx-auto text-center">
-          <div className="mb-8">
-            <div className="text-6xl mb-4">🌴</div>
-            <h1 className="text-6xl md:text-8xl font-bold mb-4">
-              <span className="text-white">CRIPTO</span>
-              <br />
-              <span className="text-yellow-400">OASIS</span>
-            </h1>
-            <p className="text-xl md:text-2xl text-white/80 max-w-4xl mx-auto mb-12">
-              Sua chave para o oásis da nova economia. NFT Genesis com benefícios reais, 
-              renda passiva e acesso vitalício a uma comunidade exclusiva de 350 membros.
-            </p>
+      <section id="hero" className="pt-24 pb-16 px-4 relative overflow-hidden">
+        <div className="container mx-auto text-center max-w-5xl">
+          {/* Logo centralizado */}
+          <div className="mb-6">
+            <img
+              src="public/logo/logo.png"
+              alt="Cripto Oasis Logo"
+              className="mx-auto w-auto h-auto max-w-full mb-6"
+              
+            />
           </div>
-
+           <p className="text-xl md:text-2xl text-white/80 max-w-4xl mx-auto mb-12">
+            Sua chave para o oásis da nova economia. NFT Genesis com benefícios reais, renda passiva e acesso vitalício a uma comunidade exclusiva de 350 membros.
+          </p>
           {/* Countdown */}
-          <div className="mb-12">
-            <h3 className="text-lg text-white/60 mb-6">TEMPO RESTANTE PARA MINT ESPECIAL</h3>
-            <div className="flex justify-center space-x-8">
-              <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-yellow-400">{days.toString().padStart(2, '0')}</div>
-                <div className="text-sm text-white/60">Days</div>
+            
+
+            <div className="countdown-container max-w-2xl mx-auto mb-12">
+              <p className="text-lg mb-6 font-normal">TEMPO RESTANTE PARA MINT ESPECIAL</p>
+              <div className="flex justify-center space-x-4 md:space-x-6">
+              {['days', 'hours', 'minutes', 'seconds'].map((unit, idx) => (
+                <div key={unit} className="text-center">
+                  <div className="bg-black/65 rounded-lg px-4 py-3 md:px-6 md:py-5 text-pink-500 text-3xl md:text-5xl font-extrabold tracking-wide ">
+                    {timeLeft[unit].toString().padStart(2, '0')}
+                  </div>
+                  <div className="text-[7px] md:text-xs text-pink-700 font-semibold tracking-widest mt-1 uppercase">
+                    {unit.charAt(0).toUpperCase() + unit.slice(1)}
+                  </div>
+                </div>
+              ))}
+
               </div>
-              <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-yellow-400">{hours.toString().padStart(2, '0')}</div>
-                <div className="text-sm text-white/60">Hours</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-yellow-400">{minutes.toString().padStart(2, '0')}</div>
-                <div className="text-sm text-white/60">Minutes</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-yellow-400">{seconds.toString().padStart(2, '0')}</div>
-                <div className="text-sm text-white/60">Seconds</div>
-              </div>
+            </div>
+
+
+          {/* Features Grid */}
+          <div className="flex justify-center items-stretch gap-6 mt-12">
+            <div className="fluorescent-card rounded-xl">
+              <Users className="w-8 h-8 text-yellow-400 mb-2" />
+              <h3 className="text-green-400 font-bold">350 Únicos</h3>
+              <p className="text-white/60 text-sm">Comunidade exclusiva limitada</p>
+            </div>
+
+            <div className="fluorescent-card rounded-xl">
+              <DollarSign className="w-8 h-8 text-yellow-400 mb-2" />
+              <h3 className="text-green-400 font-bold">Renda Passiva</h3>
+              <p className="text-white/60 text-sm">6-10% ROI anual projetado</p>
+            </div>
+
+            <div className="fluorescent-card  rounded-xl">
+              <Gift className="w-8 h-8 text-yellow-400 mb-2" />
+              <h3 className="text-green-400 font-bold">Benefícios VIP</h3>
+              <p className="text-white/60 text-sm">Acesso vitalício e brindes</p>
+            </div>
+
+            <div className="fluorescent-card rounded-xl">
+              <BarChart3 className="w-8 h-8 text-yellow-400 mb-2" />
+              <h3 className="text-green-400 font-bold">Transparência</h3>
+              <p className="text-white/60 text-sm">Dashboard público em tempo real</p>
             </div>
           </div>
 
-          {/* Features Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="fluorescent-card">
-              <CardContent className="p-8 text-center">
-                <Users className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
-                <h3 className="text-2xl font-bold text-yellow-400 mb-2">350 Únicos</h3>
-                <p className="text-white/70">Comunidade exclusiva limitada</p>
-              </CardContent>
-            </Card>
 
-            <Card className="fluorescent-card">
-              <CardContent className="p-8 text-center">
-                <DollarSign className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
-                <h3 className="text-2xl font-bold text-yellow-400 mb-2">Renda Passiva</h3>
-                <p className="text-white/70">6-10% ROI anual projetado</p>
-              </CardContent>
-            </Card>
-
-            <Card className="fluorescent-card">
-              <CardContent className="p-8 text-center">
-                <Gift className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
-                <h3 className="text-2xl font-bold text-yellow-400 mb-2">Benefícios VIP</h3>
-                <p className="text-white/70">Acesso vitalício e brindes</p>
-              </CardContent>
-            </Card>
-
-            <Card className="fluorescent-card">
-              <CardContent className="p-8 text-center">
-                <BarChart3 className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
-                <h3 className="text-2xl font-bold text-yellow-400 mb-2">Transparência</h3>
-                <p className="text-white/70">Dashboard público em tempo real</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              onClick={() => scrollToSection('mint')}
-              size="lg" 
-              className="fluorescent-button bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-lg px-8 py-4"
-            >
-              MINT AGORA - $300
-            </Button>
-            <Button 
-              onClick={() => scrollToSection('about')}
-              variant="outline" 
-              size="lg" 
-              className="fluorescent-button border-white/30 text-white hover:bg-white/10 text-lg px-8 py-4"
-            >
-              Saiba Mais
-            </Button>
-          </div>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
+              <Button 
+                onClick={() => scrollToSection('mint')}
+                size="lg" 
+                className="fluorescent-button bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-lg px-8 py-4 text-white font-bold"
+              >
+                MINT AGORA - $300
+              </Button>
+              <Button 
+                onClick={() => scrollToSection('about')}
+                variant="outline" 
+                size="lg" 
+                className="fluorescent-button border-pink-400/50 text-white hover:bg-pink-500/20 text-lg px-8 py-4"
+              >
+                Saiba Mais
+              </Button>
+            </div>
         </div>
       </section>
 
@@ -217,9 +229,8 @@ function App() {
       <section id="about" className="py-16 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold mb-8">
-              <span className="text-orange-400">SOBRE O</span>{' '}
-              <span className="text-purple-400">PROJETO</span>
+            <h2 className="text-4xl md:text-6xl font-bold mb-8 gradient-text">
+              SOBRE O PROJETO
             </h2>
             <p className="text-xl text-white/80 max-w-4xl mx-auto">
               CriptoOasis Genesis não é apenas uma NFT - é seu passaporte para uma nova forma de investir e participar da 
@@ -276,9 +287,14 @@ function App() {
 
             <div className="text-center">
               <div className="relative w-64 h-64 mx-auto mb-8">
-                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-orange-500 to-purple-600 rounded-full animate-spin-slow"></div>
-                <div className="absolute inset-2 bg-gradient-to-br from-purple-900 to-blue-900 rounded-full flex items-center justify-center">
-                  <div className="text-6xl">🏝️</div>
+                {/* Outer spinning gradient frame with new colors */}
+                <div className="absolute inset-0 bg-gradient-to-r from-[#E32988] via-[#00FF7B] to-[#471D73] rounded-full animate-spin-slow"></div>
+                <div className="absolute inset-2 bg-gradient-to-br from-purple-900 to-blue-900 rounded-full flex items-center justify-center overflow-hidden">
+                  <img
+                    src="/images/token.png" // Adjust the path to your token.png file
+                    alt="Token"
+                    className="w-full h-full object-contain" // Ensure image fits within the circle without distortion
+                  />
                 </div>
               </div>
 
@@ -309,13 +325,13 @@ function App() {
       <section id="mint" className="py-16 px-4">
         <div className="container mx-auto max-w-2xl">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">MINT OFICIAL</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 gradient-text">MINT OFICIAL</h2>
             <p className="text-xl text-white/80">
               Garanta sua NFT CriptoOasis Genesis e torne-se membro vitalício da comunidade mais exclusiva do cripto.
             </p>
           </div>
 
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+          <Card className="bg-black/75 border-white/10 backdrop-blur-sm">
             <CardContent className="p-8">
               <h3 className="text-2xl font-bold mb-6 text-center">MINT CRIPTOOASIS GENESIS</h3>
               
@@ -447,7 +463,7 @@ function App() {
       <section id="benefits" className="py-16 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold mb-8">BENEFÍCIOS EXCLUSIVOS</h2>
+            <h2 className="text-4xl md:text-6xl font-bold mb-8 gradient-text">BENEFÍCIOS EXCLUSIVOS</h2>
             <p className="text-xl text-white/80 max-w-3xl mx-auto">
               Holders da CriptoOasis Genesis desfrutam de benefícios únicos e vitalícios
             </p>
@@ -522,69 +538,7 @@ function App() {
           </div>
         </div>
       </section>
-
-      {/* FAQ Section */}
-      <section id="faq" className="py-16 px-4">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold mb-8">PERGUNTAS FREQUENTES</h2>
-          </div>
-
-          <div className="space-y-6">
-            <Card className="fluorescent-card">
-              <CardContent className="p-8">
-                <h3 className="text-xl font-bold mb-4">Como funciona a renda passiva?</h3>
-                <p className="text-white/70">
-                  40% do capital arrecadado é investido em operações rentáveis (trading algorítmico, DeFi, investimentos estratégicos). 
-                  Os lucros são distribuídos trimestralmente para todos os holders de forma proporcional.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="fluorescent-card">
-              <CardContent className="p-8">
-                <h3 className="text-xl font-bold mb-4">Os benefícios são realmente vitalícios?</h3>
-                <p className="text-white/70">
-                  Sim! Uma vez holder, você mantém acesso permanente ao grupo VIP, distribuição de lucros, brindes e todos os benefícios. 
-                  Não há taxas recorrentes ou renovações.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="fluorescent-card">
-              <CardContent className="p-8">
-                <h3 className="text-xl font-bold mb-4">Como posso acompanhar as operações?</h3>
-                <p className="text-white/70">
-                  Teremos um dashboard público onde todos podem acompanhar em tempo real as operações, performance dos investimentos 
-                  e distribuição de lucros. Transparência total é nosso compromisso.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="fluorescent-card">
-              <CardContent className="p-8">
-                <h3 className="text-xl font-bold mb-4">Qual a diferença para outras NFTs?</h3>
-                <p className="text-white/70">
-                  Enquanto a maioria promete utilidade futura, nós entregamos valor real desde o dia 1. Modelo econômico sustentável, 
-                  transparência total e benefícios tangíveis comprovados.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="fluorescent-card">
-              <CardContent className="p-8">
-                <h3 className="text-xl font-bold mb-4">Posso vender minha NFT depois?</h3>
-                <p className="text-white/70">
-                  Sim, as NFTs podem ser negociadas normalmente no OpenSea e outras plataformas. O novo proprietário automaticamente 
-                  herda todos os benefícios e direitos.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Roadmap Section */}
+          {/* Roadmap Section */}
       <section id="roadmap" className="py-16 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
@@ -650,33 +604,72 @@ function App() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 px-4 border-t border-white/10">
-        <div className="container mx-auto text-center">
-          <div className="flex items-center justify-center space-x-2 mb-6">
-            <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center font-bold text-black">
-              CO
-            </div>
-            <span className="text-xl font-bold">CRIPTO OASIS</span>
+      {/* FAQ Section */}
+      <section id="faq" className="py-16 px-4">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-6xl font-bold mb-8 gradient-text">PERGUNTAS FREQUENTES</h2>
           </div>
-          
-          <div className="flex justify-center space-x-6 mb-6">
-            <a href="#" className="text-white/70 hover:text-white transition-colors">
-              <Twitter size={24} />
-            </a>
-            <a href="#" className="text-white/70 hover:text-white transition-colors">
-              <MessageCircle size={24} />
-            </a>
-            <a href="#" className="text-white/70 hover:text-white transition-colors">
-              <Globe size={24} />
-            </a>
+
+          <div className="space-y-6">
+            <Card className="fluorescent-card">
+              <CardContent className="p-8">
+                <h3 className="text-xl font-bold mb-4">Como funciona a renda passiva?</h3>
+                <p className="text-white/70">
+                  40% do capital arrecadado é investido em operações rentáveis (trading algorítmico, DeFi, investimentos estratégicos). 
+                  Os lucros são distribuídos trimestralmente para todos os holders de forma proporcional.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="fluorescent-card">
+              <CardContent className="p-8">
+                <h3 className="text-xl font-bold mb-4">Os benefícios são realmente vitalícios?</h3>
+                <p className="text-white/70">
+                  Sim! Uma vez holder, você mantém acesso permanente ao grupo VIP, distribuição de lucros, brindes e todos os benefícios. 
+                  Não há taxas recorrentes ou renovações.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="fluorescent-card">
+              <CardContent className="p-8">
+                <h3 className="text-xl font-bold mb-4">Como posso acompanhar as operações?</h3>
+                <p className="text-white/70">
+                  Teremos um dashboard público onde todos podem acompanhar em tempo real as operações, performance dos investimentos 
+                  e distribuição de lucros. Transparência total é nosso compromisso.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="fluorescent-card">
+              <CardContent className="p-8">
+                <h3 className="text-xl font-bold mb-4">Qual a diferença para outras NFTs?</h3>
+                <p className="text-white/70">
+                  Enquanto a maioria promete utilidade futura, nós entregamos valor real desde o dia 1. Modelo econômico sustentável, 
+                  transparência total e benefícios tangíveis comprovados.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="fluorescent-card">
+              <CardContent className="p-8">
+                <h3 className="text-xl font-bold mb-4">Posso vender minha NFT depois?</h3>
+                <p className="text-white/70">
+                  Sim, as NFTs podem ser negociadas normalmente no OpenSea e outras plataformas. O novo proprietário automaticamente 
+                  herda todos os benefícios e direitos.
+                </p>
+              </CardContent>
+            </Card>
           </div>
-          
-          <p className="text-white/60 text-sm">
-            © 2024 CriptoOasis Genesis. Todos os direitos reservados.
-          </p>
         </div>
-      </footer>
+      </section>
+
+  
+
+      {/* Footer */}
+          <Footer/>
+      </div>
     </div>
   );
 }
