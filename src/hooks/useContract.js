@@ -2,42 +2,34 @@ import { useState, useEffect, useCallback } from 'react';
 import { ethers } from 'ethers';
 import { useWeb3 } from './useWeb3';
 
-// Endereço do contrato (será atualizado após deploy)
-const CONTRACT_ADDRESS = "0x0000000000000000000000000000000000000000"; // Placeholder
+const environments = import.meta.env;
 
-// ABI do contrato NFT
+const CONTRACT_ADDRESS = environments.VITE_CONTRACT_ADDRESS;
+
 const CONTRACT_ABI = [
     "function mint(uint256 quantity) external payable",
-    "function totalSupply() external view returns (uint256)",
-    "function remainingSupply() external view returns (uint256)",
-    "function MINT_PRICE() external view returns (uint256)",
-    "function MAX_PER_WALLET() external view returns (uint256)",
-    "function MAX_SUPPLY() external view returns (uint256)",
-    "function mintingActive() external view returns (bool)",
-    "function mintedByWallet(address) external view returns (uint256)",
-    "function canMint(address wallet, uint256 quantity) external view returns (bool)",
+    "function maxSupply() external view returns (uint256)",
+    "function getCurrentSupply() external view returns (uint256)",
+    "function minPrice() external view returns (uint256)",
+    "function maxPerWallet() external view returns (uint256)",
+    "function isPaused() external view returns (bool)",
+    "function getAmountMinted(address) external view returns (uint256)",
     "function owner() external view returns (address)",
-    "function toggleMinting() external",
-    "function emergencyWithdraw() external",
-    "event NFTMinted(address indexed to, uint256 tokenId, uint256 quantity)",
-    "event MintingStatusChanged(bool active)"
+    "event MintCompleted(uint256 tokenId, address owner)"
 ];
 
 export const useContract = () => {
     const { signer, provider, account } = useWeb3();
     const [contract, setContract] = useState(null);
     const [contractData, setContractData] = useState({
-        totalSupply: 0,
-        remainingSupply: 350,
-        mintPrice: '0.08',
-        maxPerWallet: 5,
-        maxSupply: 350,
-        mintingActive: true
+        maxSupply: 0,
+        currentSupply: 0,
+        mintPrice: '0',
+        maxPerWallet: 0,
     });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // Criar instância do contrato
     useEffect(() => {
         if (provider && CONTRACT_ADDRESS !== "0x0000000000000000000000000000000000000000") {
             try {
@@ -54,18 +46,8 @@ export const useContract = () => {
         }
     }, [signer, provider]);
 
-    // Buscar dados do contrato
     const fetchContractData = useCallback(async () => {
         if (!contract) {
-            // Dados mockados para desenvolvimento
-            setContractData({
-                totalSupply: 129,
-                remainingSupply: 221,
-                mintPrice: '0.08',
-                maxPerWallet: 5,
-                maxSupply: 350,
-                mintingActive: true
-            });
             return;
         }
 
@@ -73,28 +55,22 @@ export const useContract = () => {
             setIsLoading(true);
             
             const [
-                totalSupply,
-                remainingSupply,
+                maxSupply,
+                currentSupply,
                 mintPrice,
                 maxPerWallet,
-                maxSupply,
-                mintingActive
             ] = await Promise.all([
-                contract.totalSupply(),
-                contract.remainingSupply(),
-                contract.MINT_PRICE(),
-                contract.MAX_PER_WALLET(),
-                contract.MAX_SUPPLY(),
-                contract.mintingActive()
+                contract.maxSupply(),
+                contract.getCurrentSupply(),
+                contract.minPrice(),
+                contract.maxPerWallet(),
             ]);
 
             setContractData({
-                totalSupply: Number(totalSupply),
-                remainingSupply: Number(remainingSupply),
+                maxSupply: Number(maxSupply),
+                currentSupply: Number(currentSupply),
                 mintPrice: ethers.formatEther(mintPrice),
                 maxPerWallet: Number(maxPerWallet),
-                maxSupply: Number(maxSupply),
-                mintingActive
             });
         } catch (error) {
             console.error("Erro ao buscar dados do contrato:", error);
@@ -104,45 +80,29 @@ export const useContract = () => {
         }
     }, [contract]);
 
-    // Função para mintar NFT
     const mintNFT = useCallback(async (quantity) => {
         if (!contract || !signer) {
             throw new Error("Contrato ou signer não disponível");
-        }
-
-        if (!contractData.mintingActive) {
-            throw new Error("Mint não está ativo no momento");
         }
 
         try {
             setIsLoading(true);
             setError(null);
 
-            // Calcular custo total
             const mintPrice = ethers.parseEther(contractData.mintPrice);
             const totalCost = mintPrice * BigInt(quantity);
-            
-            // Estimar gas
-            const gasEstimate = await contract.mint.estimateGas(quantity, {
-                value: totalCost
-            });
-            
-            // Adicionar 20% de margem no gas
-            const gasLimit = gasEstimate * 120n / 100n;
 
-            // Executar transação
             const transaction = await contract.mint(quantity, {
                 value: totalCost,
-                gasLimit: gasLimit
             });
 
             return transaction;
         } catch (error) {
-            console.error("Erro no mint:", error);
-            
-            // Tratar erros específicos
+            console.log(error);
             if (error.code === 'INSUFFICIENT_FUNDS') {
                 throw new Error("Saldo insuficiente para completar a transação");
+            } else if (error.code === 'ACTION_REJECTED') {
+                throw new Error("Operação cancelada");
             } else if (error.message.includes('Max supply exceeded')) {
                 throw new Error("Quantidade excede o supply máximo");
             } else if (error.message.includes('Exceeds max per wallet')) {
@@ -157,24 +117,11 @@ export const useContract = () => {
         }
     }, [contract, signer, contractData]);
 
-    // Verificar se pode mintar
-    const canMint = useCallback(async (walletAddress, quantity) => {
-        if (!contract || !walletAddress) return false;
-        
-        try {
-            return await contract.canMint(walletAddress, quantity);
-        } catch (error) {
-            console.error("Erro ao verificar elegibilidade:", error);
-            return false;
-        }
-    }, [contract]);
-
-    // Obter quantidade já mintada por uma carteira
     const getMintedByWallet = useCallback(async (walletAddress) => {
         if (!contract || !walletAddress) return 0;
         
         try {
-            const minted = await contract.mintedByWallet(walletAddress);
+            const minted = await contract.getAmountMinted(walletAddress);
             return Number(minted);
         } catch (error) {
             console.error("Erro ao obter quantidade mintada:", error);
@@ -182,7 +129,6 @@ export const useContract = () => {
         }
     }, [contract]);
 
-    // Verificar se é o owner do contrato
     const isOwner = useCallback(async () => {
         if (!contract || !account) return false;
         
@@ -195,7 +141,6 @@ export const useContract = () => {
         }
     }, [contract, account]);
 
-    // Alternar status do minting (apenas owner)
     const toggleMinting = useCallback(async () => {
         if (!contract || !signer) {
             throw new Error("Contrato ou signer não disponível");
@@ -212,7 +157,6 @@ export const useContract = () => {
         }
     }, [contract, signer, fetchContractData]);
 
-    // Retirar fundos (apenas owner)
     const withdrawFunds = useCallback(async () => {
         if (!contract || !signer) {
             throw new Error("Contrato ou signer não disponível");
@@ -228,7 +172,6 @@ export const useContract = () => {
         }
     }, [contract, signer]);
 
-    // Carregar dados iniciais
     useEffect(() => {
         fetchContractData();
     }, [fetchContractData]);
@@ -239,7 +182,6 @@ export const useContract = () => {
         isLoading,
         error,
         mintNFT,
-        canMint,
         getMintedByWallet,
         isOwner,
         toggleMinting,

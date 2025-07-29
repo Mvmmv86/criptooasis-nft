@@ -7,14 +7,15 @@ import { useWeb3 } from './hooks/useWeb3';
 import { useContract } from './hooks/useContract';
 import ParticleBackground from './components/ParticleBackground'
 import RetrowaveGrid from './components/RetrowaveGrid'
-import NeonSun from './components/NeonSun'
 import NavLogo from './components/NavLogo';
 import Footer from './components/Footer';
 import './App.css';
+import {useCountdown} from "@/hooks/useCountdown.js";
 
 function App() {
   const { account, isConnected, connectWallet, disconnectWallet, isLoading: web3Loading, error: web3Error } = useWeb3();
-  const { contractData, mintNFT, canMint, getMintedByWallet, isLoading: contractLoading } = useContract();
+  const { contractData, mintNFT, getMintedByWallet, isLoading: contractLoading } = useContract();
+  const timeLeft = useCountdown({ initialDays: 6, initialHours: 23, initialMinutes: 59, initialSeconds: 58 });
   
   const [quantity, setQuantity] = useState(1);
   const [isMinting, setIsMinting] = useState(false);
@@ -22,43 +23,7 @@ function App() {
   const [mintSuccess, setMintSuccess] = useState('');
   const [txHash, setTxHash] = useState('');
   const [userMintedCount, setUserMintedCount] = useState(0);
-  const [timeLeft, setTimeLeft] = useState({
-    days: 6,
-    hours: 23,
-    minutes: 59,
-    seconds: 58
-  });
 
-  // Countdown timer
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        let { days, hours, minutes, seconds } = prev;
-        
-        if (seconds > 0) {
-          seconds--;
-        } else if (minutes > 0) {
-          minutes--;
-          seconds = 59;
-        } else if (hours > 0) {
-          hours--;
-          minutes = 59;
-          seconds = 59;
-        } else if (days > 0) {
-          days--;
-          hours = 23;
-          minutes = 59;
-          seconds = 59;
-        }
-        
-        return { days, hours, minutes, seconds };
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  // Smooth scroll function
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -66,7 +31,6 @@ function App() {
     }
   };
 
-  // Get user minted count when connected
   useEffect(() => {
     if (isConnected && account) {
       getMintedByWallet(account).then(count => {
@@ -81,11 +45,6 @@ function App() {
       return;
     }
 
-    if (!canMint(quantity, userMintedCount)) {
-      setMintError('Quantidade inválida ou limite excedido');
-      return;
-    }
-
     setIsMinting(true);
     setMintError('');
     setMintSuccess('');
@@ -94,8 +53,7 @@ function App() {
       const result = await mintNFT(quantity);
       setTxHash(result.hash);
       setMintSuccess(`Mint realizado com sucesso! ${quantity} NFT(s) mintado(s).`);
-      
-      // Update user minted count
+
       const newCount = await getMintedByWallet(account);
       setUserMintedCount(newCount);
     } catch (error) {
@@ -118,7 +76,7 @@ function App() {
     }
   };
 
-  const totalCost = (0.08 * quantity).toFixed(4);
+  const totalCost = (contractData.mintPrice * quantity).toFixed(4);
   const totalCostUSD = (300 * quantity).toFixed(2);
 
   return (
@@ -178,10 +136,8 @@ function App() {
         </div>
       </nav>
 
-      {/* Hero Section */}
       <section id="hero" className="pt-24 pb-16 px-4 relative overflow-hidden">
         <div className="container mx-auto text-center max-w-5xl">
-          {/* Logo centralizado */}
           <div className="mb-6">
             <img
               src="public/logo/logo.png"
@@ -193,9 +149,6 @@ function App() {
            <p className="text-xl md:text-2xl text-white/80 max-w-4xl mx-auto mb-12">
             Sua chave para o oásis da nova economia. NFT Genesis com benefícios reais, renda passiva e acesso vitalício a uma comunidade exclusiva de 350 membros.
           </p>
-          {/* Countdown */}
-            
-
             <div className="countdown-container max-w-2xl mx-auto mb-12">
               <p className="text-lg mb-6 font-normal">TEMPO RESTANTE PARA MINT ESPECIAL</p>
               <div className="flex justify-center space-x-4 md:space-x-6">
@@ -374,11 +327,11 @@ function App() {
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
                   <span className="text-white/70">Mintados</span>
-                  <span className="font-bold">129 / 350</span>
+                  <span className="font-bold">{ contractData.currentSupply } / { contractData.maxSupply }</span>
                 </div>
                 
                 <div className="w-full bg-white/10 rounded-full h-2">
-                  <div className="bg-gradient-to-r from-green-500 to-emerald-600 h-2 rounded-full" style={{width: '37%'}}></div>
+                  <div className="bg-gradient-to-r from-green-500 to-emerald-600 h-2 rounded-full" style={{width: (contractData.currentSupply / contractData.maxSupply * 100) + '%'}}></div>
                 </div>
                 
                 <div className="text-center text-white/70">
@@ -440,7 +393,7 @@ function App() {
                       ) : (
                         <Button
                           onClick={handleMint}
-                          disabled={isMinting || contractLoading || !canMint(quantity, userMintedCount)}
+                          disabled={isMinting || contractLoading}
                           className="fluorescent-button w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
                           size="lg"
                         >
