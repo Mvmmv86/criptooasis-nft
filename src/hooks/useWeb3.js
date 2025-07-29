@@ -11,6 +11,10 @@ export const useWeb3 = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    const environments = import.meta.env;
+
+    const CHAIN = environments.VITE_CHAIN;
+
     const connectWallet = useCallback(async () => {
         setIsLoading(true);
         setError(null);
@@ -29,6 +33,18 @@ export const useWeb3 = () => {
             const signer = await provider.getSigner();
             const account = await signer.getAddress();
             const network = await provider.getNetwork();
+            const chainId = CHAIN === 'sepolia' ? 11155111n : 1n;
+
+            if (network.chainId !== chainId) {
+                try {
+                    await ethereumProvider.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: CHAIN === 'sepolia' ? '0xaa36a7' :'0x1' }],
+                    });
+                } catch (switchError) {
+                    throw new Error('Por favor, mude para a rede Ethereum Mainnet no MetaMask.');
+                }
+            }
             
             setProvider(provider);
             setSigner(signer);
@@ -56,7 +72,7 @@ export const useWeb3 = () => {
         setIsConnected(false);
         setError(null);
         
-        // Remover do localStorage
+
         localStorage.removeItem('walletConnected');
     }, []);
 
@@ -96,7 +112,6 @@ export const useWeb3 = () => {
         checkConnection();
     }, [connectWallet]);
 
-    // Escutar mudanças de conta e rede
     useEffect(() => {
         const handleAccountsChanged = (accounts) => {
             if (accounts.length === 0) {
@@ -107,7 +122,6 @@ export const useWeb3 = () => {
         };
 
         const handleChainChanged = () => {
-            // Recarregar a página quando a rede mudar
             window.location.reload();
         };
 

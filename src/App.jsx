@@ -335,7 +335,7 @@ function App() {
                 </div>
                 
                 <div className="text-center text-white/70">
-                  221 NFTs restantes
+                  { contractData.maxSupply - contractData.currentSupply } NFTs restantes
                 </div>
 
                 <div className="border-t border-white/10 pt-6">
@@ -393,7 +393,7 @@ function App() {
                       ) : (
                         <Button
                           onClick={handleMint}
-                          disabled={isMinting || contractLoading}
+                          disabled={isMinting || contractLoading || quantity + userMintedCount >= 5}
                           className="fluorescent-button w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
                           size="lg"
                         >

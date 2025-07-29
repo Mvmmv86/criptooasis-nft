@@ -96,9 +96,15 @@ export const useContract = () => {
                 value: totalCost,
             });
 
-            return transaction;
+            const receipt = await transaction.wait();
+
+            if (receipt.status !== 1) {
+                throw new Error("Transação falhou ao ser minerada.");
+            }
+
+            return receipt;
         } catch (error) {
-            console.log(error);
+
             if (error.code === 'INSUFFICIENT_FUNDS') {
                 throw new Error("Saldo insuficiente para completar a transação");
             } else if (error.code === 'ACTION_REJECTED') {
@@ -110,7 +116,7 @@ export const useContract = () => {
             } else if (error.message.includes('Incorrect ETH value')) {
                 throw new Error("Valor em ETH incorreto");
             } else {
-                throw new Error(error.message || "Erro desconhecido no mint");
+                throw new Error("Erro ao mintar a NFT, tente novamente");
             }
         } finally {
             setIsLoading(false);
