@@ -280,7 +280,7 @@
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px); /* Adjust distance as needed */
+    transform: translateY(40px); /* Adjust distance as needed */
   }
   to {
     opacity: 1;
@@ -292,7 +292,7 @@
 @keyframes fadeInDown {
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(-40px);
   }
   to {
     opacity: 1;
@@ -304,7 +304,7 @@
 @keyframes fadeInLeft {
   from {
     opacity: 0;
-    transform: translateX(-20px);
+    transform: translateX(-40px);
   }
   to {
     opacity: 1;
@@ -316,7 +316,7 @@
 @keyframes fadeInRight {
   from {
     opacity: 0;
-    transform: translateX(20px);
+    transform: translateX(40px);
   }
   to {
     opacity: 1;
@@ -337,7 +337,7 @@
 .fade-in {
   opacity: 0;
   animation-name: fadeIn;
-  animation-duration: 0.8s;
+  animation-duration: 1s;
   animation-timing-function: ease-out;
   animation-fill-mode: forwards;  /* mantém estado final */
   animation-play-state: paused;   /* começa pausado */
@@ -346,7 +346,7 @@
 .fade-in-up {
   opacity: 0;
   animation-name: fadeInUp;
-  animation-duration: 0.8s;
+  animation-duration: 1s;
   animation-timing-function: ease-out;
   animation-fill-mode: forwards;
   animation-play-state: paused;
@@ -355,7 +355,7 @@
 .fade-in-down {
   opacity: 0;
   animation-name: fadeInDown;
-  animation-duration: 0.8s;
+  animation-duration: 1s;
   animation-timing-function: ease-out;
   animation-fill-mode: forwards;
   animation-play-state: paused;
@@ -364,7 +364,7 @@
 .fade-in-left {
   opacity: 0;
   animation-name: fadeInLeft;
-  animation-duration: 0.8s;
+  animation-duration: 1s;
   animation-timing-function: ease-out;
   animation-fill-mode: forwards;
   animation-play-state: paused;
@@ -373,7 +373,7 @@
 .fade-in-right {
   opacity: 0;
   animation-name: fadeInRight;
-  animation-duration: 0.8s;
+  animation-duration: 1s;
   animation-timing-function: ease-out;
   animation-fill-mode: forwards;
   animation-play-state: paused;
@@ -435,3 +435,38 @@
 .fade-in-right { transform: translateX(20px); }
 .fade-in-up { transform: translateY(20px); }
 .fade-in-down { transform: translateY(-20px); }
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}

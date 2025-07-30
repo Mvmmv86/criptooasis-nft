@@ -1,5 +1,5 @@
 export function initScrollAnimations() {
-  const elements = document.querySelectorAll('.fade-in-up, .fade-in-down , .fade-in-left, .fade-in-right, .fade-in'); // só fade-in-up aqui, teste só um
+  const elements = document.querySelectorAll('.fade-in-up, .fade-in-down , .fade-in-left, .fade-in-right, .fade-in');
 
   const observer = new IntersectionObserver(
     (entries) => {
@@ -9,15 +9,15 @@ export function initScrollAnimations() {
 
           const delay = el.getAttribute('data-delay');
           if (delay) {
-            el.style.animationDelay = delay; // seta o delay via style inline
+            el.style.animationDelay = delay;
           }
 
-          el.classList.add('show'); // dispara animação
-          observer.unobserve(el); // só anima 1 vez
+          el.classList.add('show'); 
+          observer.unobserve(el);
         }
       });
     },
-    { threshold: 0.6 }
+    { threshold: 0.4 }
   );
 
   elements.forEach((el) => {
