@@ -11,11 +11,19 @@ import Footer from './components/Footer';
 import './App.css';
 import {useCountdown} from "@/hooks/useCountdown.js";
 import {ConnectButton, ClaimButton, lightTheme} from "thirdweb/react"
+import useScrollAnimation from "@/hooks/useScrollAnimation.js";
+import { initScrollAnimations } from "./utils/scrollAnimation.js";
+
 import {useThierdWeb} from "@/hooks/useThierdWeb.js";
 
 function App() {
+  useEffect(() => {
+    initScrollAnimations();
+  }, []);
   const { contractData, mintNFT, getMintedByWallet, isLoading: contractLoading, isConnected } = useContract();
   const timeLeft = useCountdown({ initialDays: 6, initialHours: 23, initialMinutes: 59, initialSeconds: 58 });
+
+  
 
   const [quantity, setQuantity] = useState(1);
   const [isMinting, setIsMinting] = useState(false);
@@ -140,9 +148,9 @@ function App() {
         </div>
       </nav>
 
-        <section id="hero" className="pt-24 pb-16 px-4 relative overflow-hidden">
+        <section id="hero" className="pt-24 pb-16 px-4 relative overflow-hidden ">
           <div className="container mx-auto text-center max-w-5xl">
-            <div className="mb-6">
+            <div className="mb-6 fade-in-down" data-delay="1.3s">
             <img
               src="public/logo/logo.png"
               alt="Cripto Oasis Logo"
@@ -150,10 +158,11 @@ function App() {
               
             />
           </div>
-           <p className="text-xl md:text-2xl text-white/80 max-w-4xl mx-auto mb-12">
+               <p className="text-xl md:text-2xl text-white/80 max-w-4xl mx-auto mb-12 fade-in-left"
+                data-delay="2s"              >
             Sua chave para o oásis da nova economia. NFT Genesis com benefícios reais, renda passiva e acesso vitalício a uma comunidade exclusiva de 350 membros.
           </p>
-            <div className="countdown-container max-w-2xl mx-auto mb-12">
+            <div className="countdown-container max-w-2xl mx-auto mb-12 fade-in-up">
               <p className="text-lg mb-6 font-normal">TEMPO RESTANTE PARA MINT ESPECIAL</p>
               <div className="flex justify-center space-x-4 md:space-x-6">
               {['days', 'hours', 'minutes', 'seconds'].map((unit, idx) => (
@@ -171,26 +180,26 @@ function App() {
 
 
           {/* Features Grid */}
-          <div className="flex justify-center items-stretch gap-6 mt-12">
-            <div className="fluorescent-card rounded-xl">
+          <div className="flex flex-col md:flex-row justify-center items-stretch gap-6 mt-12 px-4 md:px-0">
+            <div className="fluorescent-card rounded-xl fade-in-up" data-delay="0.3s">
               <Users className="w-8 h-8 text-yellow-400 mb-2" />
               <h3 className="text-green-400 font-bold">350 Únicos</h3>
               <p className="text-white/60 text-sm">Comunidade exclusiva limitada</p>
             </div>
 
-            <div className="fluorescent-card rounded-xl">
+            <div className="fluorescent-card rounded-xl fade-in-down" data-delay="0.5s">
               <DollarSign className="w-8 h-8 text-yellow-400 mb-2" />
               <h3 className="text-green-400 font-bold">Renda Passiva</h3>
               <p className="text-white/60 text-sm">6-10% ROI anual projetado</p>
             </div>
 
-            <div className="fluorescent-card  rounded-xl">
+            <div className="fluorescent-card  rounded-xl fade-in-up" data-delay="0.7s">
               <Gift className="w-8 h-8 text-yellow-400 mb-2" />
               <h3 className="text-green-400 font-bold">Benefícios VIP</h3>
               <p className="text-white/60 text-sm">Acesso vitalício e brindes</p>
             </div>
 
-            <div className="fluorescent-card rounded-xl">
+            <div className="fluorescent-card rounded-xl fade-in-down" data-delay="0.9s">
               <BarChart3 className="w-8 h-8 text-yellow-400 mb-2" />
               <h3 className="text-green-400 font-bold">Transparência</h3>
               <p className="text-white/60 text-sm">Dashboard público em tempo real</p>
@@ -222,7 +231,7 @@ function App() {
       <section id="about" className="py-16 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold mb-8 gradient-text">
+            <h2 className="text-4xl md:text-6xl font-bold mb-8 gradient-text fade-in-left" data-delay="0.5s">
               SOBRE O PROJETO
             </h2>
             <p className="text-xl text-white/80 max-w-4xl mx-auto">
