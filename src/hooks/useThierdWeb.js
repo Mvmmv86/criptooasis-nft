@@ -4,7 +4,7 @@ import {sepolia, ethereum} from "thirdweb/chains";
 import { ethers6Adapter } from "thirdweb/adapters/ethers6";
 import {useEffect, useState} from "react";
 
-export const useThierdweb = () => {
+export const useThierdWeb = () => {
     const account = useActiveAccount();
 
     const environments = import.meta.env;

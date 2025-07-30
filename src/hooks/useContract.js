@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ethers } from 'ethers';
-import {useThierdweb} from "@/hooks/useThierdWeb.js";
+import {useThierdWeb} from "@/hooks/useThierdWeb.js";
 
 const environments = import.meta.env;
 
@@ -19,7 +19,7 @@ const CONTRACT_ABI = [
 ];
 
 export const useContract = () => {
-    const {account, signer} = useThierdweb();
+    const {account, signer} = useThierdWeb();
 
     const [contract, setContract] = useState(null);
     const [contractData, setContractData] = useState({

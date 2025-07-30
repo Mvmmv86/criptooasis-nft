@@ -11,7 +11,7 @@ import Footer from './components/Footer';
 import './App.css';
 import {useCountdown} from "@/hooks/useCountdown.js";
 import {ConnectButton, ClaimButton, lightTheme} from "thirdweb/react"
-import {useThierdweb} from "@/hooks/useThierdweb.js";
+import {useThierdWeb} from "@/hooks/useThierdWeb.js";
 
 function App() {
   const { contractData, mintNFT, getMintedByWallet, isLoading: contractLoading, isConnected } = useContract();
@@ -24,7 +24,7 @@ function App() {
   const [txHash, setTxHash] = useState('');
   const [userMintedCount, setUserMintedCount] = useState(0);
 
-  const {client, account, chain} = useThierdweb();
+  const {client, account, chain} = useThierdWeb();
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
