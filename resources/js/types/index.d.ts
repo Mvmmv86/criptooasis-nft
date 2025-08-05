@@ -41,3 +41,17 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+
+export interface NFT {
+    uri: string;
+    image: string;
+    image_url: string;
+    name: string;
+    description: string;
+    owner: string | null;
+    attributes: {
+        trait_type: string;
+        value: string;
+    }[]
+}

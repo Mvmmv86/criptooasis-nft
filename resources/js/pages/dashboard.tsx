@@ -1,13 +1,12 @@
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
+import { type BreadcrumbItem, NFT } from '@/types';
 import { Head } from '@inertiajs/react';
 import Paginate from '@/components/paginate';
-import { createThirdwebClient, getContract, toEther } from 'thirdweb';
-import { readContract } from "thirdweb";
-import { ethereum, sepolia } from 'thirdweb/chains';
+import { toEther } from 'thirdweb';
 import { useCallback, useEffect, useState } from 'react';
 import { toBigInt } from 'ethers';
 import { useThierdWeb } from '@/hooks/useThierdWeb';
+import ShowNft from '@/components/show-nft';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -16,17 +15,8 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-interface NFTProps {
-    uri: string;
-    image: string;
-    image_url: string;
-    name: string;
-    description: string;
-    owner: string | null;
-}
-
 interface Pagination {
-    data: NFTProps[],
+    data: NFT[],
     current_page: number,
     last_page:number,
     links: {
@@ -44,7 +34,7 @@ export default function Dashboard({ nfts }: DashboardProps) {
 
     const [maxSupply, setMaxSupply] = useState(toBigInt(0));
     const [currentSupply, setCurrentSupply] = useState(toBigInt(0));
-    const [nftData, setNftData] = useState<NFTProps[]>([]);
+    const [nftData, setNftData] = useState<NFT[]>([]);
     const [treasuryWalletBalance, setTreasuryWalletBalance] = useState('');
     const [royaltyWalletBalance, setRoyaltyWalletBalance] = useState('');
     const [isLoadingSupply, setIsLoadingSupply] = useState(false);
@@ -82,7 +72,7 @@ export default function Dashboard({ nfts }: DashboardProps) {
         setRoyaltyWalletBalance(toEther(royaltyAddress));
         setTreasuryWalletBalance(toEther(treasuryAddress));
         setIsLoadingWalletBalance(false);
-    });
+    }, []);
 
     useEffect(() => {
         if (nftData.length === 0) return
@@ -199,7 +189,7 @@ export default function Dashboard({ nfts }: DashboardProps) {
                                         </div>
                                     </td>
                                     <td className="p-4">
-                                        <span>{item.name}</span>
+                                        <ShowNft nft={item}/>
                                     </td>
                                     <td className="p-4">
                                         <span className="line-clamp-1">{item.description}</span>
