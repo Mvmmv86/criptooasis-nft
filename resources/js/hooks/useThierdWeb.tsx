@@ -3,12 +3,15 @@ import { useActiveAccount } from "thirdweb/react";
 import {sepolia, ethereum} from "thirdweb/chains";
 import { ethers6Adapter } from "thirdweb/adapters/ethers6";
 import { useMemo } from 'react';
+import { getRpcClient, eth_getBalance } from "thirdweb/rpc";
 
 export const useThierdWeb = () => {
     const account = useActiveAccount();
 
     const environments = import.meta.env;
     const CONTRACT_ADDRESS = environments.VITE_CONTRACT_ADDRESS;
+    const TREASURY_ADDRESS = environments.VITE_TREASURY_ADDRESS;
+    const ROYALTY_ADDRESS = environments.VITE_ROYALTY_ADDRESS;
     const chain = useMemo(() =>
             environments.VITE_CHAIN_NAME === 'sepolia' ? sepolia : ethereum,
         []);
@@ -23,6 +26,8 @@ export const useThierdWeb = () => {
         address: CONTRACT_ADDRESS,
         chain: chain,
     });
+
+    const rpcRequest = getRpcClient({ client, chain });
 
     const fetchSigner = async () => {
         if(!client || !chain || !account) {
@@ -84,6 +89,20 @@ export const useThierdWeb = () => {
         });
     }
 
+    const fetchBalance = async (address: string) => {
+        return await eth_getBalance(rpcRequest, {
+            address: address,
+        });
+    }
+
+    const fetchTreasuryBalance = async () => {
+        return fetchBalance(TREASURY_ADDRESS);
+    }
+
+    const fetchRoyaltyBalance = async () => {
+        return fetchBalance(ROYALTY_ADDRESS);
+    }
+
     return {
         client,
         account,
@@ -95,6 +114,11 @@ export const useThierdWeb = () => {
         fetchMinPrice,
         fetchMaxPerWallet,
         fetchMintedPerWallet,
-        fetchOwnerOf
+        fetchOwnerOf,
+        fetchBalance,
+        fetchRoyaltyBalance,
+        fetchTreasuryBalance,
+        TREASURY_ADDRESS,
+        ROYALTY_ADDRESS
     };
 }
