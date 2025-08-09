@@ -28,7 +28,8 @@ export const useContract = () => {
         fetchMaxPerWallet,
         fetchMinPrice,
         fetchMaxSupply,
-        fetchMintedPerWallet
+        fetchMintedPerWallet,
+        contract: contractThird,
     } = useThierdWeb();
 
     const [signer, setSigner] = useState<Signer | null>(null);
@@ -69,7 +70,7 @@ export const useContract = () => {
     }, [signer]);
 
     const fetchContractData = useCallback(async () => {
-        if (!contract) {
+        if (!contractThird) {
             return;
         }
 
@@ -151,7 +152,7 @@ export const useContract = () => {
         fetchContractData,
         CONTRACT_ADDRESS,
         isConnected: !!account,
-        fetchMintedPerWallet
+        fetchMintedPerWallet,
     };
 };
 

@@ -101,7 +101,7 @@ export default function Welcome() {
     return (
         <>
             {isLoading &&(
-                <LoadingScreen onComplete={() => setIsLoading(false)} duration={800} />
+                <LoadingScreen onComplete={() => setIsLoading(false)} duration={1000} />
             )}
             <div className="min-h-screen relative overflow-x-hidden ">
                 {/* Retrowave static background */}
@@ -414,7 +414,7 @@ export default function Welcome() {
                                                     ) : (
                                                         <Button
                                                             onClick={handleMint}
-                                                            disabled={isMinting || contractLoading || quantity + userMintedCount >= 5}
+                                                            disabled={isMinting || contractLoading || quantity + userMintedCount > 5}
                                                             className="fluorescent-button w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
                                                             size="lg"
                                                         >

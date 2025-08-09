@@ -13,14 +13,11 @@ const LoadingScreen = ({ onComplete, duration = 3000, fadeDuration = 1000 }) => 
   }, [duration]);
 
   useEffect(() => {
-    if (fadeOut) {
-      // Aguarda o tempo do fade e então executa o onComplete
-      const fadeTimer = setTimeout(() => {
-        onComplete();
-      }, fadeDuration);
+      if (!fadeOut) return;
+
+      const fadeTimer = setTimeout(onComplete, fadeDuration);
       return () => clearTimeout(fadeTimer);
-    }
-  }, [fadeOut, fadeDuration, onComplete]);
+  }, [fadeOut]);
 
   return (
   <div
