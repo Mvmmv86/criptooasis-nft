@@ -1,10 +1,8 @@
-import { type SharedData } from '@/types';
-import { usePage } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button.jsx';
 import { Card, CardContent } from '@/components/ui/card.jsx';
 import { Badge } from '@/components/ui/badge.jsx';
-import { Minus, Plus, ExternalLink, MessageCircle, Twitter, Globe, Users, DollarSign, Gift, BarChart3, Shield, TrendingUp, Award, BookOpen, Handshake, Eye } from 'lucide-react';
+import { Minus, Plus, ExternalLink, MessageCircle, Twitter, Globe, Users, DollarSign, Gift, BarChart3, TrendingUp, Award, BookOpen, Handshake, Eye } from 'lucide-react';
 import { useContract } from '@/hooks/useContract';
 import ParticleBackground from '@/components/ParticleBackground'
 import RetrowaveGrid from '@/components/RetrowaveGrid'
@@ -18,7 +16,6 @@ import LoadingScreen from '@/components/LoadingScreen';
 import {useThierdWeb} from "@/hooks/useThierdWeb.js";
 
 export default function Welcome() {
-    const { auth } = usePage<SharedData>().props;
 
     useEffect(() => {
         initScrollAnimations();
@@ -178,7 +175,7 @@ export default function Welcome() {
                             <div className="countdown-container max-w-2xl mx-auto mb-12 fade-in-up">
                                 <p className="text-lg mb-6 font-normal">TEMPO RESTANTE PARA MINT ESPECIAL</p>
                                 <div className="flex justify-center space-x-4 md:space-x-6">
-                                    {['days', 'hours', 'minutes', 'seconds'].map((unit, idx) => (
+                                    {['days', 'hours', 'minutes', 'seconds'].map((unit) => (
                                         <div key={unit} className="text-center">
                                             <div className="bg-black/65 rounded-lg px-4 py-3 md:px-6 md:py-5 text-pink-500 text-3xl md:text-5xl font-extrabold tracking-wide ">
                                                 {timeLeft[unit].toString().padStart(2, '0')}

@@ -1,4 +1,11 @@
-import { createThirdwebClient, getContract, readContract } from 'thirdweb';
+import {
+    createThirdwebClient,
+    getContract,
+    prepareContractCall,
+    readContract,
+    sendTransaction,
+    waitForReceipt
+} from 'thirdweb';
 import { useActiveAccount } from "thirdweb/react";
 import {sepolia, ethereum} from "thirdweb/chains";
 import { ethers6Adapter } from "thirdweb/adapters/ethers6";
@@ -103,6 +110,47 @@ export const useThierdWeb = () => {
         return fetchBalance(ROYALTY_ADDRESS);
     }
 
+    const fetchPaused = async () => {
+        return await readContract({
+            contract,
+            method: "function paused() view returns (bool)",
+            params: []
+        });
+    }
+
+    const pause = async () => {
+        console.log(account);
+        if (!account) {
+            return;
+        }
+
+        const transaction = prepareContractCall({
+            contract,
+            method: "function pause()",
+            params: [],
+        });
+
+        const tx =  await sendTransaction({account, transaction});
+
+        return await waitForReceipt({...tx, maxBlocksWaitTime: 3});
+    }
+
+    const unpause = async () => {
+        if (!account) {
+            return;
+        }
+
+        const transaction = prepareContractCall({
+            contract,
+            method: "function unpause()",
+            params: [],
+        });
+
+        const tx = await sendTransaction({account, transaction});
+
+        return await waitForReceipt({...tx, maxBlocksWaitTime: 3});
+    }
+
     return {
         client,
         account,
@@ -118,6 +166,9 @@ export const useThierdWeb = () => {
         fetchBalance,
         fetchRoyaltyBalance,
         fetchTreasuryBalance,
+        fetchPaused,
+        pause,
+        unpause,
         TREASURY_ADDRESS,
         ROYALTY_ADDRESS
     };
