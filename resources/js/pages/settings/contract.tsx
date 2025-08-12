@@ -35,18 +35,22 @@ export default function Contract() {
     const onChangeStatus = async (value: boolean) => {
         setIsLoading(true);
 
-        if (value) {
-            const pauseContract = await pause();
-            console.log(pauseContract);
-            if(pauseContract?.status === 'success') {
-                setIsPaused(true);
-            }
-        } else {
-            const unpauseContract = await unpause();
+        try {
+            if (value) {
+                const pauseContract = await pause();
+                console.log(pauseContract);
+                if (pauseContract?.status === 'success') {
+                    setIsPaused(true);
+                }
+            } else {
+                const unpauseContract = await unpause();
 
-            if(unpauseContract?.status === 'success') {
-                setIsPaused(false);
+                if (unpauseContract?.status === 'success') {
+                    setIsPaused(false);
+                }
             }
+        }catch (error) {
+            console.error(error);
         }
 
         setIsLoading(false);

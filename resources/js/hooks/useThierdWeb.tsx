@@ -119,7 +119,6 @@ export const useThierdWeb = () => {
     }
 
     const pause = async () => {
-        console.log(account);
         if (!account) {
             return;
         }
