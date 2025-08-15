@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button.jsx';
 import { Card, CardContent } from '@/components/ui/card.jsx';
 import { Badge } from '@/components/ui/badge.jsx';
-import { Minus, Plus, ExternalLink, MessageCircle, Twitter, Globe, Users, DollarSign, Gift, BarChart3, Shield, TrendingUp, Award, BookOpen, Handshake, Eye } from 'lucide-react';
+import { Minus, Plus, ExternalLink, MessageCircle, Twitter, Users, DollarSign, Gift, BarChart3, Shield, TrendingUp, Award, BookOpen, Handshake, Eye } from 'lucide-react';
 import { useContract } from './hooks/useContract';
 import ParticleBackground from './components/ParticleBackground'
 import RetrowaveGrid from './components/RetrowaveGrid'
@@ -136,15 +136,6 @@ function App() {
             <a href="#" className="text-white/70 hover:text-white transition-colors">
               <MessageCircle size={20}/>
             </a>
-            <a href="#" className="text-white/70 hover:text-white transition-colors">
-              <Globe size={20}/>
-              <img
-                src="/icons/discord.png"
-                alt="Discord"
-                className="w-5 h-5 object-contain"
-              />
-            </a>
-
             <div><ConnectButton client={client} theme={lightTheme({
               colors: {
                 modalBg: "white",
