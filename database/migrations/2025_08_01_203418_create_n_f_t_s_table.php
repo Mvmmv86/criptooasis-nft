@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('n_f_t_s', function (Blueprint $table) {
             $table->id();
-            $table->string('uri');
+            $table->string('metadata_id');
             $table->string('image');
             $table->string('image_url');
             $table->string('name');

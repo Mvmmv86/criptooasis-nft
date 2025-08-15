@@ -44,12 +44,13 @@ export interface User {
 
 
 export interface NFT {
-    uri: string;
+    metadata_id: string;
     image: string;
     image_url: string;
     name: string;
     description: string;
     owner: string | null;
+    token_id: string | null;
     attributes: {
         trait_type: string;
         value: string;

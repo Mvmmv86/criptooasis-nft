@@ -27,7 +27,7 @@ class GetSaveNFT implements ShouldQueue
             $imageUrl = $baseUrl . str($data['image'])->after('ipfs://');
 
             NFT::query()->updateOrCreate([
-                'uri'         => $key,
+                'metadata_id' => $key,
                 'image'       => $data['image'],
                 'image_url'   => $imageUrl,
                 'name'        => $data['name'],

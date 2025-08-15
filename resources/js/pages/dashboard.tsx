@@ -34,18 +34,15 @@ export default function Dashboard({ nfts }: DashboardProps) {
 
     const [maxSupply, setMaxSupply] = useState(toBigInt(0));
     const [currentSupply, setCurrentSupply] = useState(toBigInt(0));
-    const [nftData, setNftData] = useState<NFT[]>([]);
     const [treasuryWalletBalance, setTreasuryWalletBalance] = useState('');
     const [royaltyWalletBalance, setRoyaltyWalletBalance] = useState('');
     const [isLoadingSupply, setIsLoadingSupply] = useState(false);
-    const [isLoadingOwners, setIsLoadingOwners] = useState(false);
     const [isLoadingWalletBalance, setIsLoadingWalletBalance] = useState(false);
 
     const {
         contract,
         fetchCurrentSupply,
         fetchMaxSupply,
-        fetchOwnerOf,
         fetchRoyaltyBalance,
         fetchTreasuryBalance,
         TREASURY_ADDRESS,
@@ -73,32 +70,6 @@ export default function Dashboard({ nfts }: DashboardProps) {
         setTreasuryWalletBalance(toEther(treasuryAddress));
         setIsLoadingWalletBalance(false);
     }, []);
-
-    useEffect(() => {
-        if (nftData.length === 0) return
-        if (nftData.every(n => n.owner !== undefined)) return
-
-        setIsLoadingOwners(true);
-        (async () => {
-            const withOwners = await Promise.all(
-                nftData.map(async (nft) => {
-                    let owner: string | null = null
-                    try {
-                        owner = await fetchOwnerOf(nft.uri);
-                    } catch {
-                        //
-                    }
-                    return { ...nft, owner }
-                })
-            )
-            setNftData(withOwners)
-            setIsLoadingOwners(false)
-        })()
-    }, [nftData])
-
-    useEffect(() => {
-        setNftData(nfts?.data);
-    }, [nfts?.data]);
 
     useEffect(() => {
         supplyData();
@@ -178,10 +149,10 @@ export default function Dashboard({ nfts }: DashboardProps) {
                         </thead>
                         <tbody>
                         {
-                            nftData.map((item, index) => (
+                            nfts.data.map((item, index) => (
                                 <tr key={index} className="border-y">
                                     <td className="p-4 w-fit">
-                                        <span>{item.uri}</span>
+                                        <span>{item.token_id ?? '--'}</span>
                                     </td>
                                     <td className="p-4">
                                         <div className="w-32 h-32">
@@ -195,13 +166,13 @@ export default function Dashboard({ nfts }: DashboardProps) {
                                         <span className="line-clamp-1">{item.description}</span>
                                     </td>
                                     <td className="p-4">
-                                        {isLoadingOwners ? (
-                                            <div className="w-36 h-6 bg-sidebar-accent animate-pulse rounded"></div>
-                                        ) : (
-                                            item.owner ? (<a target="_blank"
-                                                             href={"https://etherscan.io/address/" + item.owner}>{item.owner}</a>) : (
-                                                <span>None</span>)
-                                        )}
+                                        {item.owner
+                                            ? (
+                                                <a target="_blank"
+                                                   href={"https://etherscan.io/address/" + item.owner}>{item.owner}</a>
+                                            ) : (
+                                                <span>None</span>
+                                            )}
                                     </td>
                                 </tr>
                             ))
