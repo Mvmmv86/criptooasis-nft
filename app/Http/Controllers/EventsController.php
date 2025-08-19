@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\Event\ProcessTokenTransfer;
+use App\Jobs\Event\ProcessMetadataAssigned;
 use App\Models\NFT;
 use App\Models\Token;
 use Illuminate\Http\JsonResponse;
@@ -14,11 +16,7 @@ class EventsController extends Controller
     {
         logger($request);
 
-        Token::query()->updateOrCreate([
-            'token_id' => $request->tokenId
-        ],[
-            'owner' => $request->to
-        ]);
+        ProcessTokenTransfer::dispatch($request->tokenId, $request->to);
 
         return response()->json([
             'message' => 'Owner update successfully'
@@ -29,13 +27,7 @@ class EventsController extends Controller
     {
         logger($request);
 
-        $nft = NFT::query()->where('metadata_id', $request->metadataId)->first();
-
-        Token::query()->updateOrCreate([
-            'token_id' => $request->tokenId,
-        ], [
-            'nft_id' => $nft->id
-        ]);
+        ProcessMetadataAssigned::dispatch($request->metadataId, $request->tokenId);
 
         return response()->json([
             'message' => 'Owner update successfully'
