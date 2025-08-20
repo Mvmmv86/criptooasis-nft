@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
 import { Card, CardContent } from '@/components/ui/card.jsx';
 import { Badge } from '@/components/ui/badge.jsx';
@@ -6,6 +7,7 @@ import { Minus, Plus, ExternalLink, MessageCircle, Twitter, Globe, Users, Dollar
 import { useContract } from './hooks/useContract';
 import ParticleBackground from './components/ParticleBackground'
 import RetrowaveGrid from './components/RetrowaveGrid'
+import Navbar from './components/Navbar';
 import NavLogo from './components/NavLogo';
 import Footer from './components/Footer';
 import './App.css';
@@ -114,33 +116,7 @@ function App() {
       <ParticleBackground />
       <RetrowaveGrid />
       <div className='relative z-10'>
-      <nav className="fixed top-0 w-full z-50 bg-black/20 backdrop-blur-md border-b border-white/10">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <NavLogo />
-          
-          <div className="hidden md:flex space-x-6">
-            <button onClick={() => scrollToSection('mint')} className="hover:text-yellow-400 transition-colors">Mint</button>
-            <button onClick={() => scrollToSection('about')} className="hover:text-yellow-400 transition-colors">Sobre</button>
-            <button onClick={() => scrollToSection('benefits')} className="hover:text-yellow-400 transition-colors">Benefícios</button>
-            <button onClick={() => scrollToSection('roadmap')} className="hover:text-yellow-400 transition-colors">Roadmap</button>
-            <button onClick={() => scrollToSection('faq')} className="hover:text-yellow-400 transition-colors">FAQ</button>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <a href="#" className="text-white/70 hover:text-white transition-colors">
-              <Twitter size={20}/>
-            </a>
-            <a href="#" className="text-white/70 hover:text-white transition-colors">
-              <MessageCircle size={20}/>
-            </a>
-            <div><ConnectButton client={client} theme={lightTheme({
-              colors: {
-                modalBg: "white",
-              },
-            })} chain={chain}/></div>
-          </div>
-        </div>
-      </nav>
+      <Navbar showScrollButtons={true} scrollToSection={scrollToSection} />
 
         <section id="hero" className="pt-24 pb-16 px-4 relative overflow-hidden ">
           <div className="container mx-auto text-center max-w-5xl">
