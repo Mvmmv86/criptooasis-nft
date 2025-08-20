@@ -93,9 +93,6 @@ function App() {
 
   return (
     <>
-    {isLoading &&(
-      <LoadingScreen onComplete={() => setIsLoading(false)} duration={800} />
-    )}
     <div className="min-h-screen relative overflow-x-hidden ">
       {/* Retrowave static background */}
     <div
