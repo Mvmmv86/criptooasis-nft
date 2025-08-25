@@ -18,7 +18,7 @@ class RankingController extends Controller
             ')
             ->groupBy('owner')
             ->orderBy('total', 'desc')
-            ->paginate(10);
+            ->get();
 
         $tops = NFT::query()
             ->leftJoin('tokens', 'tokens.nft_id', '=', 'n_f_t_s.id')

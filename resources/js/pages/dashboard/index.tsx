@@ -10,7 +10,7 @@ import ShowNft from '@/components/show-nft';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Index',
         href: '/dashboard',
     },
 ];
@@ -30,7 +30,7 @@ interface DashboardProps {
     nfts: Pagination
 }
 
-export default function Dashboard({ nfts }: DashboardProps) {
+export default function Index({ nfts }: DashboardProps) {
 
     const [maxSupply, setMaxSupply] = useState(toBigInt(0));
     const [currentSupply, setCurrentSupply] = useState(toBigInt(0));
@@ -78,7 +78,7 @@ export default function Dashboard({ nfts }: DashboardProps) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Dashboard" />
+            <Head title="Index" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                     <div

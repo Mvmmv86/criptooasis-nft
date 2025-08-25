@@ -15,7 +15,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Ranking',
-        href: '/ranking',
+        href: '/dashboard/ranking',
         icon: ChartNoAxesCombined,
     },
 ];
