@@ -1,62 +1,3 @@
-<<<<<<< HEAD
-import {useState, useEffect} from 'react';
-import { Button } from '@/components/ui/button.jsx';
-import { Card, CardContent } from '@/components/ui/card.jsx';
-import { Badge } from '@/components/ui/badge.jsx';
-import { Minus, Plus, Twitter, MessageCircle, Globe, Users, DollarSign, Gift, BarChart3, TrendingUp, Award, BookOpen, Handshake, Eye } from 'lucide-react';
-import './App.css';
-import {ConnectButton, ClaimButton, lightTheme} from "thirdweb/react";
-import {useThierdweb} from "@/hooks/useThierdweb.js";
-import { getTotalClaimedSupply, getTotalUnclaimedSupply, getActiveClaimCondition, balanceOf} from "thirdweb/extensions/erc721";
-import {useCountdown} from "@/hooks/useCountdown.js";
-
-function App() {
-  const { days, hours, minutes, seconds } = useCountdown({ initialDays: 6, initialHours: 23, initialMinutes: 59, initialSeconds: 58 });
-
-  const {client, account, contract} = useThierdweb();
-
-  const [totalClaimedSupply, setTotalClaimedSupply] = useState(0);
-  const [totalUnclaimedSupply, setTotalUnclaimedSupply] = useState(0);
-  const [totalSupply, setTotalSupply] = useState(0);
-  const [claimConditions, setClaimConditions] = useState({});
-  const [userMintedCount, setUserMintedCount] = useState(0);
-  const [success, setSuccess] = useState(false);
-
-  useEffect(() => {
-      if(!contract) {
-          return;
-      }
-
-      loadData();
-  }, [success]);
-
-  useEffect(() => {
-    if(!account) {
-      return;
-    }
-    (async () => {
-      const mintedCount = await balanceOf({ contract, owner: account.address });
-
-      setUserMintedCount(Number(mintedCount));
-    })();
-  }, [account, success]);
-
-  const loadData  = async() => {
-    const totalClaimedSupply = await getTotalClaimedSupply({ contract });
-    const totalUnclaimedSupply = await getTotalUnclaimedSupply({ contract });
-    const claimCondition = await getActiveClaimCondition({ contract });
-
-    setTotalClaimedSupply(Number(totalClaimedSupply));
-    setTotalUnclaimedSupply(Number(totalUnclaimedSupply));
-    setTotalSupply(Number(totalClaimedSupply) + Number(totalUnclaimedSupply));
-    setClaimConditions(claimCondition);
-  }
-
-  const [quantity, setQuantity] = useState(1);
-  const [error, setError] = useState(null);
-
-  // Smooth scroll function
-=======
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
@@ -97,7 +38,6 @@ function App() {
 
   const {client, account, chain} = useThierdWeb();
 
->>>>>>> origin/development
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -105,8 +45,6 @@ function App() {
     }
   };
 
-<<<<<<< HEAD
-=======
   useEffect(() => {
     if (isConnected && account) {
       getMintedByWallet(account?.address).then(count => {
@@ -140,7 +78,6 @@ function App() {
     }
   };
 
->>>>>>> origin/development
   const increaseQuantity = () => {
     if (quantity < 5 && quantity + userMintedCount < 5) {
       setQuantity(quantity + 1);
@@ -175,35 +112,11 @@ function App() {
     />
           
 
-<<<<<<< HEAD
-          <div className="flex items-center space-x-4">
-            <a href="#" className="text-white/70 hover:text-white transition-colors">
-              <Twitter size={20} />
-            </a>
-            <a href="#" className="text-white/70 hover:text-white transition-colors">
-              <MessageCircle size={20} />
-            </a>
-            <a href="#" className="text-white/70 hover:text-white transition-colors">
-              <Globe size={20} />
-            </a>
-
-            {contract && (
-                <div><ConnectButton client={client} theme={lightTheme({
-                  colors: {
-                    modalBg: "white",
-                  },
-                })} chain={contract.chain}/></div>
-            )}
-          </div>
-        </div>
-      </nav>
-=======
       {/* Animated backgrounds */}
       <ParticleBackground />
       <RetrowaveGrid />
       <div className='relative z-10'>
       <Navbar showScrollButtons={true} scrollToSection={scrollToSection} />
->>>>>>> origin/development
 
         <section id="hero" className="pt-24 pb-16 px-4 relative overflow-hidden ">
           <div className="container mx-auto text-center max-w-5xl">
@@ -215,28 +128,6 @@ function App() {
               
             />
           </div>
-<<<<<<< HEAD
-
-          {/* Countdown */}
-          <div className="mb-12">
-            <h3 className="text-lg text-white/60 mb-6">TEMPO RESTANTE PARA MINT ESPECIAL</h3>
-            <div className="flex justify-center space-x-8">
-              <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-yellow-400">{days.toString().padStart(2, '0')}</div>
-                <div className="text-sm text-white/60">Days</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-yellow-400">{hours.toString().padStart(2, '0')}</div>
-                <div className="text-sm text-white/60">Hours</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-yellow-400">{minutes.toString().padStart(2, '0')}</div>
-                <div className="text-sm text-white/60">Minutes</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-yellow-400">{seconds.toString().padStart(2, '0')}</div>
-                <div className="text-sm text-white/60">Seconds</div>
-=======
                <p className="text-xl md:text-2xl text-white/80 max-w-4xl mx-auto mb-12 fade-in-left"
                 data-delay="1s">
             Sua chave para o oásis da nova economia. NFT Genesis com benefícios reais, renda passiva e acesso vitalício a uma comunidade exclusiva de 350 membros.
@@ -254,7 +145,6 @@ function App() {
                   </div>
                 </div>
               ))}
->>>>>>> origin/development
               </div>
             </div>
 
@@ -419,17 +309,6 @@ function App() {
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
                   <span className="text-white/70">Mintados</span>
-<<<<<<< HEAD
-                  <span className="font-bold">{ totalClaimedSupply } / { totalSupply }</span>
-                </div>
-                
-                <div className="w-full bg-white/10 rounded-full h-2">
-                  <div className="bg-gradient-to-r from-green-500 to-emerald-600 h-2 rounded-full" style={{width: (totalClaimedSupply / totalSupply) * 100 +'%'}}></div>
-                </div>
-                
-                <div className="text-center text-white/70">
-                  { totalUnclaimedSupply } NFTs restantes
-=======
                   <span className="font-bold">{ contractData.currentSupply } / { contractData.maxSupply }</span>
                 </div>
                 
@@ -439,7 +318,6 @@ function App() {
                 
                 <div className="text-center text-white/70">
                   { contractData.maxSupply - contractData.currentSupply } NFTs restantes
->>>>>>> origin/development
                 </div>
 
                 <div className="border-t border-white/10 pt-6">
@@ -484,64 +362,11 @@ function App() {
                         </div>
                       </div>
 
-<<<<<<< HEAD
-                      {!account ? (
-=======
                       {!isConnected ? (
->>>>>>> origin/development
                           <div className="text-center"><ConnectButton client={client} theme={lightTheme({
                             colors: {
                               modalBg: "white",
                             },
-<<<<<<< HEAD
-                          })} chain={contract.chain}/></div>
-                      ) : (
-                          contract &&
-                              (
-                                  <div className="text-center">
-                                    <ClaimButton
-                                        contractAddress={contract.address}
-                                        chain={contract.chain}
-                                        client={client}
-                                        claimParams={{
-                                          type: "ERC721",
-                                          quantity: BigInt(quantity),
-                                        }}
-                                        onError={(err) => {
-                                          setError(err.message);
-                                          console.log(err);
-                                        }}
-                                        onTransactionConfirmed={() => {
-                                          setSuccess(true);
-                                        }}
-                                    >
-                                      Mint
-                                    </ClaimButton>
-                                  </div>
-                              )
-                      )}
-
-                      {account && (
-                        <div className="mt-4 text-center">
-                          <p className="text-sm text-white/70">
-                            Wallet conectada: {account.address?.slice(0, 6)}...{account.address?.slice(-4)}
-                          </p>
-                          <p className="text-xs text-white/60">
-                            Você já mintou: {userMintedCount}/5 NFTs
-                          </p>
-                        </div>
-                      )}
-
-                      {error && (
-                        <div className="mt-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
-                          <p className="text-red-300 text-sm">{error}</p>
-                        </div>
-                      )}
-
-                      {success && (
-                          <div className="mt-4 p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
-                            <p className="text-green-300 text-sm">NFT mintada com sucesso!</p>
-=======
                           })} chain={chain}/></div>
                       ) : (
                           <Button
@@ -584,7 +409,6 @@ function App() {
                                   Ver transação <ExternalLink className="w-3 h-3 ml-1"/>
                                 </a>
                             )}
->>>>>>> origin/development
                           </div>
                       )}
                     </div>

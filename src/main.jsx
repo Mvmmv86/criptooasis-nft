@@ -1,17 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-<<<<<<< HEAD
-import App from './App.jsx'
-import { ThirdwebProvider } from "thirdweb/react";
-
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-      <ThirdwebProvider>
-          <App />
-      </ThirdwebProvider>
-  </StrictMode>,
-=======
 import AppRouter from './Router.jsx'
 import { ThirdwebProvider } from "thirdweb/react";
 import {sepolia, ethereum} from "thirdweb/chains";
@@ -24,5 +13,4 @@ createRoot(document.getElementById('root')).render(
         <AppRouter />
       </StrictMode>
     </ThirdwebProvider>
->>>>>>> origin/development
 )
