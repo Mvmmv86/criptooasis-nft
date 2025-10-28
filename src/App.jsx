@@ -1,62 +1,3 @@
-<<<<<<< HEAD
-import {useState, useEffect} from 'react';
-import { Button } from '@/components/ui/button.jsx';
-import { Card, CardContent } from '@/components/ui/card.jsx';
-import { Badge } from '@/components/ui/badge.jsx';
-import { Minus, Plus, Twitter, MessageCircle, Globe, Users, DollarSign, Gift, BarChart3, TrendingUp, Award, BookOpen, Handshake, Eye } from 'lucide-react';
-import './App.css';
-import {ConnectButton, ClaimButton, lightTheme} from "thirdweb/react";
-import {useThierdweb} from "@/hooks/useThierdweb.js";
-import { getTotalClaimedSupply, getTotalUnclaimedSupply, getActiveClaimCondition, balanceOf} from "thirdweb/extensions/erc721";
-import {useCountdown} from "@/hooks/useCountdown.js";
-
-function App() {
-  const { days, hours, minutes, seconds } = useCountdown({ initialDays: 6, initialHours: 23, initialMinutes: 59, initialSeconds: 58 });
-
-  const {client, account, contract} = useThierdweb();
-
-  const [totalClaimedSupply, setTotalClaimedSupply] = useState(0);
-  const [totalUnclaimedSupply, setTotalUnclaimedSupply] = useState(0);
-  const [totalSupply, setTotalSupply] = useState(0);
-  const [claimConditions, setClaimConditions] = useState({});
-  const [userMintedCount, setUserMintedCount] = useState(0);
-  const [success, setSuccess] = useState(false);
-
-  useEffect(() => {
-      if(!contract) {
-          return;
-      }
-
-      loadData();
-  }, [success]);
-
-  useEffect(() => {
-    if(!account) {
-      return;
-    }
-    (async () => {
-      const mintedCount = await balanceOf({ contract, owner: account.address });
-
-      setUserMintedCount(Number(mintedCount));
-    })();
-  }, [account, success]);
-
-  const loadData  = async() => {
-    const totalClaimedSupply = await getTotalClaimedSupply({ contract });
-    const totalUnclaimedSupply = await getTotalUnclaimedSupply({ contract });
-    const claimCondition = await getActiveClaimCondition({ contract });
-
-    setTotalClaimedSupply(Number(totalClaimedSupply));
-    setTotalUnclaimedSupply(Number(totalUnclaimedSupply));
-    setTotalSupply(Number(totalClaimedSupply) + Number(totalUnclaimedSupply));
-    setClaimConditions(claimCondition);
-  }
-
-  const [quantity, setQuantity] = useState(1);
-  const [error, setError] = useState(null);
-
-  // Smooth scroll function
-=======
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
@@ -84,7 +25,7 @@ function App() {
   }, []);
 
   const { contractData, mintNFT, getMintedByWallet, isLoading: contractLoading, isConnected } = useContract();
-  const timeLeft = useCountdown({ initialDays: 6, initialHours: 23, initialMinutes: 59, initialSeconds: 58 });
+  const { days, hours, minutes, seconds, isExpired } = useCountdown({ targetDate: '2025-11-01T12:00:00' });
 
   
     const [isLoading, setIsLoading] = useState(true);
@@ -97,7 +38,6 @@ function App() {
 
   const {client, account, chain} = useThierdWeb();
 
->>>>>>> origin/development
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -105,8 +45,6 @@ function App() {
     }
   };
 
-<<<<<<< HEAD
-=======
   useEffect(() => {
     if (isConnected && account) {
       getMintedByWallet(account?.address).then(count => {
@@ -140,7 +78,6 @@ function App() {
     }
   };
 
->>>>>>> origin/development
   const increaseQuantity = () => {
     if (quantity < 5 && quantity + userMintedCount < 5) {
       setQuantity(quantity + 1);
@@ -175,35 +112,11 @@ function App() {
     />
           
 
-<<<<<<< HEAD
-          <div className="flex items-center space-x-4">
-            <a href="#" className="text-white/70 hover:text-white transition-colors">
-              <Twitter size={20} />
-            </a>
-            <a href="#" className="text-white/70 hover:text-white transition-colors">
-              <MessageCircle size={20} />
-            </a>
-            <a href="#" className="text-white/70 hover:text-white transition-colors">
-              <Globe size={20} />
-            </a>
-
-            {contract && (
-                <div><ConnectButton client={client} theme={lightTheme({
-                  colors: {
-                    modalBg: "white",
-                  },
-                })} chain={contract.chain}/></div>
-            )}
-          </div>
-        </div>
-      </nav>
-=======
       {/* Animated backgrounds */}
       <ParticleBackground />
       <RetrowaveGrid />
       <div className='relative z-10'>
       <Navbar showScrollButtons={true} scrollToSection={scrollToSection} />
->>>>>>> origin/development
 
         <section id="hero" className="pt-24 pb-16 px-4 relative overflow-hidden ">
           <div className="container mx-auto text-center max-w-5xl">
@@ -215,28 +128,6 @@ function App() {
               
             />
           </div>
-<<<<<<< HEAD
-
-          {/* Countdown */}
-          <div className="mb-12">
-            <h3 className="text-lg text-white/60 mb-6">TEMPO RESTANTE PARA MINT ESPECIAL</h3>
-            <div className="flex justify-center space-x-8">
-              <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-yellow-400">{days.toString().padStart(2, '0')}</div>
-                <div className="text-sm text-white/60">Days</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-yellow-400">{hours.toString().padStart(2, '0')}</div>
-                <div className="text-sm text-white/60">Hours</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-yellow-400">{minutes.toString().padStart(2, '0')}</div>
-                <div className="text-sm text-white/60">Minutes</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-yellow-400">{seconds.toString().padStart(2, '0')}</div>
-                <div className="text-sm text-white/60">Seconds</div>
-=======
                <p className="text-xl md:text-2xl text-white/80 max-w-4xl mx-auto mb-12 fade-in-left"
                 data-delay="1s">
             Sua chave para o oásis da nova economia. NFT Genesis com benefícios reais, renda passiva e acesso vitalício a uma comunidade exclusiva de 350 membros.
@@ -244,17 +135,19 @@ function App() {
             <div className="countdown-container max-w-2xl mx-auto mb-12 fade-in-up">
               <p className="text-lg mb-6 font-normal">TEMPO RESTANTE PARA MINT ESPECIAL</p>
               <div className="flex justify-center space-x-4 md:space-x-6">
-              {['days', 'hours', 'minutes', 'seconds'].map((unit, idx) => (
+              {['days', 'hours', 'minutes', 'seconds'].map((unit, idx) => {
+                const value = unit === 'days' ? days : unit === 'hours' ? hours : unit === 'minutes' ? minutes : seconds;
+                return (
                 <div key={unit} className="text-center">
                   <div className="bg-black/65 rounded-lg px-4 py-3 md:px-6 md:py-5 text-pink-500 text-3xl md:text-5xl font-extrabold tracking-wide ">
-                    {timeLeft[unit].toString().padStart(2, '0')}
+                    {value.toString().padStart(2, '0')}
                   </div>
                   <div className="text-[7px] md:text-xs text-pink-700 font-semibold tracking-widest mt-1 uppercase">
                     {unit.charAt(0).toUpperCase() + unit.slice(1)}
                   </div>
                 </div>
-              ))}
->>>>>>> origin/development
+                )
+              })}
               </div>
             </div>
 
@@ -263,14 +156,14 @@ function App() {
           <div className="flex flex-col md:flex-row justify-center items-stretch gap-6 mt-12 px-4 md:px-0">
             <div className="fluorescent-card rounded-xl fade-in-up" data-delay="0.5s">
               <Users className="w-8 h-8 text-yellow-400 mb-2" />
-              <h3 className="text-green-400 font-bold">350 Únicos</h3>
+              <h3 className="text-green-400 font-bold">350 Unicos</h3>
               <p className="text-white/60 text-sm">Comunidade exclusiva limitada</p>
             </div>
 
             <div className="fluorescent-card rounded-xl fade-in-down" data-delay="0.7s">
-              <DollarSign className="w-8 h-8 text-yellow-400 mb-2" />
-              <h3 className="text-green-400 font-bold">Renda Passiva</h3>
-              <p className="text-white/60 text-sm">6-10% ROI anual projetado</p>
+              <Handshake className="w-8 h-8 text-yellow-400 mb-2" />
+              <h3 className="text-green-400 font-bold">Ecossistema de Vantagens</h3>
+              <p className="text-white/60 text-sm">Perks, drops e eventuais distribuições aprovadas.</p>
             </div>
 
             <div className="fluorescent-card  rounded-xl fade-in-up" data-delay="0.9s">
@@ -311,7 +204,7 @@ function App() {
       <section id="about" className="py-16 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold mb-8 gradient-text fade-in-left" data-delay="0.5s">
+            <h2 className="text-4xl md:text-6xl font-bold mb-8 text-yellow-400 fade-in-left" data-delay="0.5s">
               SOBRE O PROJETO
             </h2>
             <p className="text-xl text-white/80 max-w-4xl mx-auto fade-in-right" data-delay="0.7s">
@@ -320,82 +213,56 @@ function App() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             <div>
-              <h3 className="text-2xl font-bold text-yellow-400 mb-6 fade-in-down" data-delay="0.5s">O Diferencial</h3>
+              <h3 className="text-2xl font-bold text-yellow-400 mb-6 fade-in-down" data-delay="0.5s">O DIFERENCIAL</h3>
               <p className="text-white/80 mb-6 fade-in-left" data-delay="0.6s">
-                Enquanto 99% dos projetos NFT prometem utilidade futura que nunca se materializa, 
+                Enquanto 99% dos projetos NFT prometem utilidade futura que nunca se materializa,
                 CriptoOasis Genesis entrega valor real desde o primeiro dia.
               </p>
               <p className="text-white/80 mb-8 fade-in-left" data-delay="0.7s">
-                Nossa abordagem combina exclusividade garantida (apenas 350 unidades), transparência total 
-                (dashboard público) e benefícios tangíveis (renda passiva + brindes).
+                Unimos arte e utilidades concretas (governança, conteúdos, experiências e perks) para 350 membros vitalícios, criando um ecossistema de vantagens que evolui com as decisões da comunidade.
               </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-white/5 p-6 rounded-lg border border-white/10 fade-in-left" data-delay="0.5s">
-                  <Eye className="w-8 h-8 text-blue-400 mb-3" />
-                  <h4 className="font-bold mb-2">Transparência Total</h4>
-                  <p className="text-sm text-white/70">
-                    Dashboard público com todas as operações em tempo real. Auditoria externa trimestral e relatórios detalhados.
-                  </p>
-                </div>
-
-                <div className="bg-white/5 p-6 rounded-lg border border-white/10 fade-in-right" data-delay="0.5s">
-                  <TrendingUp className="w-8 h-8 text-green-400 mb-3" />
-                  <h4 className="font-bold mb-2">Modelo Sustentável</h4>
-                  <p className="text-sm text-white/70">
-                    40% do capital em operações rentáveis (trading, DeFi, investimentos). ROI projetado de 6-10% ao ano.
-                  </p>
-                </div>
-
-                <div className="bg-white/5 p-6 rounded-lg border border-white/10 fade-in-left" data-delay="0.7s">
-                  <Users className="w-8 h-8 text-purple-400 mb-3" />
-                  <h4 className="font-bold mb-2">Comunidade Exclusiva</h4>
-                  <p className="text-sm text-white/70">
-                    Apenas 350 membros vitalícios. Acesso a grupo VIP, decisões estratégicas e networking premium.
-                  </p>
-                </div>
-
-                <div className="bg-white/5 p-6 rounded-lg border border-white/10 fade-in-right" data-delay="0.7s">
-                  <Gift className="w-8 h-8 text-yellow-400 mb-3" />
-                  <h4 className="font-bold mb-2">Benefícios Reais</h4>
-                  <p className="text-sm text-white/70">
-                    Brindes físicos, educação premium, mentoria personalizada e participação nos lucros.
-                  </p>
-                </div>
-              </div>
+              <Button
+                onClick={() => scrollToSection('benefits')}
+                className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-8 py-3 rounded-lg mb-8"
+              >
+                Entenda mais sobre
+              </Button>
             </div>
 
-            <div className="text-center">
-              <div className="relative w-64 h-64 mx-auto mb-8 fade-in-right" data-delay="0.8s">
-                <div className="absolute inset-0 bg-gradient-to-r from-[#E32988] via-[#00FF7B] to-[#471D73] rounded-full animate-spin-slow"></div>
-                <div className="absolute inset-2 bg-gradient-to-br from-purple-900 to-blue-900 rounded-full flex items-center justify-center overflow-hidden">
-                  <img
-                    src="/images/token.png" // Adjust the path to your token.png file
-                    alt="Token"
-                    className="w-full h-full object-contain" // Ensure image fits within the circle without distortion
-                  />
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-white/5 p-6 rounded-lg border border-white/10 fade-in-left" data-delay="0.5s">
+                <Eye className="w-8 h-8 text-blue-400 mb-3" />
+                <h4 className="font-bold mb-2">Transparência Total</h4>
+                <p className="text-sm text-white/70">
+                  Dashboard público com todas as operações em tempo real. Auditoria externa trimestral e relatórios detalhados.
+                </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-6">
-                <div className="text-center fade-in-right" data-delay="0.7s">
-                  <div className="text-3xl font-bold text-yellow-400 ">350</div>
-                  <div className="text-sm text-white/60">NFTs Únicos</div>
-                </div>
-                <div className="text-center fade-in-right" data-delay="0.8s">
-                  <div className="text-3xl font-bold text-yellow-400">$300</div>
-                  <div className="text-sm text-white/60">Preço de Mint</div>
-                </div>
-                <div className="text-center fade-in-right" data-delay="1s">
-                  <div className="text-3xl font-bold text-yellow-400">6-10%</div>
-                  <div className="text-sm text-white/60">ROI Anual</div>
-                </div>
-                <div className="text-center fade-in-right" data-delay="1.1s">
-                  <div className="text-3xl font-bold text-yellow-400">$1K</div>
-                  <div className="text-sm text-white/60">Benefícios/Ano</div>
-                </div>
+              <div className="bg-white/5 p-6 rounded-lg border border-white/10 fade-in-right" data-delay="0.5s">
+                <TrendingUp className="w-8 h-8 text-green-400 mb-3" />
+                <h4 className="font-bold mb-2">Modelo Sustentável</h4>
+                <p className="text-sm text-white/70">
+                  40% operações market-neutral; 60% reservas/utilidades. Sem alavancagem+rebalance mensal+transparência on-chain. Distribuições apenas com excedente e aprovação em governança. Sem promessa de rentabilidade.
+                </p>
+              </div>
+
+              <div className="bg-white/5 p-6 rounded-lg border border-white/10 fade-in-left" data-delay="0.7s">
+                <Users className="w-8 h-8 text-purple-400 mb-3" />
+                <h4 className="font-bold mb-2">Comunidade Exclusiva</h4>
+                <p className="text-sm text-white/70">
+                  Apenas 350 membros vitalícios. Acesso a grupo VIP, decisões estratégicas e networking premium.
+                </p>
+              </div>
+
+              <div className="bg-white/5 p-6 rounded-lg border border-white/10 fade-in-right" data-delay="0.7s">
+                <Gift className="w-8 h-8 text-yellow-400 mb-3" />
+                <h4 className="font-bold mb-2">Benefícios Reais</h4>
+                <p className="text-sm text-white/70">
+                  Brindes físicos, educação premium, aulas e materiais exclusivos para holders e participação em potenciais distribuições.
+                </p>
               </div>
             </div>
           </div>
@@ -419,17 +286,6 @@ function App() {
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
                   <span className="text-white/70">Mintados</span>
-<<<<<<< HEAD
-                  <span className="font-bold">{ totalClaimedSupply } / { totalSupply }</span>
-                </div>
-                
-                <div className="w-full bg-white/10 rounded-full h-2">
-                  <div className="bg-gradient-to-r from-green-500 to-emerald-600 h-2 rounded-full" style={{width: (totalClaimedSupply / totalSupply) * 100 +'%'}}></div>
-                </div>
-                
-                <div className="text-center text-white/70">
-                  { totalUnclaimedSupply } NFTs restantes
-=======
                   <span className="font-bold">{ contractData.currentSupply } / { contractData.maxSupply }</span>
                 </div>
                 
@@ -439,7 +295,6 @@ function App() {
                 
                 <div className="text-center text-white/70">
                   { contractData.maxSupply - contractData.currentSupply } NFTs restantes
->>>>>>> origin/development
                 </div>
 
                 <div className="border-t border-white/10 pt-6">
@@ -464,7 +319,7 @@ function App() {
                         <span className="text-2xl font-bold w-8 text-center">{quantity}</span>
                         <Button
                           onClick={increaseQuantity}
-                          disabled={quantity >= 5 || quantity >= totalUnclaimedSupply}
+                          disabled={quantity >= 5 || quantity + userMintedCount >= 5}
                           variant="outline"
                           size="sm"
                           className="border-white/30 text-white hover:bg-white/10 fade-in-right" data-delay="1.3s"
@@ -484,64 +339,11 @@ function App() {
                         </div>
                       </div>
 
-<<<<<<< HEAD
-                      {!account ? (
-=======
                       {!isConnected ? (
->>>>>>> origin/development
                           <div className="text-center"><ConnectButton client={client} theme={lightTheme({
                             colors: {
                               modalBg: "white",
                             },
-<<<<<<< HEAD
-                          })} chain={contract.chain}/></div>
-                      ) : (
-                          contract &&
-                              (
-                                  <div className="text-center">
-                                    <ClaimButton
-                                        contractAddress={contract.address}
-                                        chain={contract.chain}
-                                        client={client}
-                                        claimParams={{
-                                          type: "ERC721",
-                                          quantity: BigInt(quantity),
-                                        }}
-                                        onError={(err) => {
-                                          setError(err.message);
-                                          console.log(err);
-                                        }}
-                                        onTransactionConfirmed={() => {
-                                          setSuccess(true);
-                                        }}
-                                    >
-                                      Mint
-                                    </ClaimButton>
-                                  </div>
-                              )
-                      )}
-
-                      {account && (
-                        <div className="mt-4 text-center">
-                          <p className="text-sm text-white/70">
-                            Wallet conectada: {account.address?.slice(0, 6)}...{account.address?.slice(-4)}
-                          </p>
-                          <p className="text-xs text-white/60">
-                            Você já mintou: {userMintedCount}/5 NFTs
-                          </p>
-                        </div>
-                      )}
-
-                      {error && (
-                        <div className="mt-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
-                          <p className="text-red-300 text-sm">{error}</p>
-                        </div>
-                      )}
-
-                      {success && (
-                          <div className="mt-4 p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
-                            <p className="text-green-300 text-sm">NFT mintada com sucesso!</p>
-=======
                           })} chain={chain}/></div>
                       ) : (
                           <Button
@@ -584,7 +386,6 @@ function App() {
                                   Ver transação <ExternalLink className="w-3 h-3 ml-1"/>
                                 </a>
                             )}
->>>>>>> origin/development
                           </div>
                       )}
                     </div>
@@ -615,11 +416,10 @@ function App() {
             <Card className="fluorescent-card fade-in-left" data-delay="1.2s" >
               <CardContent className="p-8">
                 <DollarSign className="w-12 h-12 text-green-400 mb-4" />
-                <h3 className="text-xl font-bold mb-4">Renda Passiva</h3>
+                <h3 className="text-xl font-bold mb-4">Economia do Clube</h3>
                 <p className="text-white/70 mb-4">
-                  Distribuição trimestral de lucros das operações. ROI projetado de 6-10% ao ano.
+                  Distribuições eventuais, condicionadas a excedente de caixa da tesouraria e voto da comunidade. Sem promessa de rentabilidade.
                 </p>
-                <div className="text-green-400 font-bold">~$18-30 por trimestre</div>
               </CardContent>
             </Card>
 
@@ -637,11 +437,10 @@ function App() {
             <Card className="fluorescent-card fade-in-left" data-delay="0.4s" >
               <CardContent className="p-8">
                 <Gift className="w-12 h-12 text-yellow-400 mb-4" />
-                <h3 className="text-xl font-bold mb-4">Brindes Físicos</h3>
+                <h3 className="text-xl font-bold mb-4">Perks & Kits</h3>
                 <p className="text-white/70 mb-4">
-                  Camisetas personalizadas, ingressos para eventos e produtos exclusivos.
+                  Kits, whitelist, descontos e experiências com parceiros. Entregas sujeitas a calendário, estoque e regras do programa.
                 </p>
-                <div className="text-yellow-400 font-bold">~$200/ano em brindes</div>
               </CardContent>
             </Card>
 
@@ -650,9 +449,8 @@ function App() {
                 <BookOpen className="w-12 h-12 text-blue-400 mb-4" />
                 <h3 className="text-xl font-bold mb-4">Educação Premium</h3>
                 <p className="text-white/70 mb-4">
-                  Aulas exclusivas sobre DeFi, Trading e Blockchain com especialistas.
+                  Trilhas exclusivas de DeFi, Trading e Blockchain e aulas ao vivo com especialistas. Material exclusivo e completo on-demand para revisão.
                 </p>
-                <div className="text-blue-400 font-bold">~$500/ano em educação</div>
               </CardContent>
             </Card>
 
@@ -663,7 +461,6 @@ function App() {
                 <p className="text-white/70 mb-4">
                   Conexões com investidores e empreendedores da comunidade cripto.
                 </p>
-                <div className="text-orange-400 font-bold">~$300/ano em eventos</div>
               </CardContent>
             </Card>
 
@@ -672,9 +469,8 @@ function App() {
                 <Eye className="w-12 h-12 text-cyan-400 mb-4" />
                 <h3 className="text-xl font-bold mb-4">Transparência Total</h3>
                 <p className="text-white/70 mb-4">
-                  Dashboard público com todas as operações e performance em tempo real.
+                  Dashboard público com todas as operações.
                 </p>
-                <div className="text-cyan-400 font-bold">100% transparente</div>
               </CardContent>
             </Card>
           </div>
@@ -693,52 +489,54 @@ function App() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <Card className="fluorescent-card fade-in-left" data-delay="1s">
               <CardContent className="p-8">
-                <Badge className="bg-green-500/20 text-green-400 mb-4">Q1 2024 - CONCLUÍDO</Badge>
+                <Badge className="bg-green-500/20 text-green-400 mb-4">Q4 2025 — Lançamento (em preparo | nov/01)</Badge>
                 <h3 className="text-xl font-bold mb-4">Lançamento</h3>
                 <ul className="text-white/70 space-y-2 text-sm">
-                  <li>• Mint das 350 NFTs Genesis</li>
-                  <li>• Criação da comunidade VIP</li>
+                  <li>• Mint Genesis (350)</li>
+                  <li>• Criação da comunidade VIP Genesis</li>
                   <li>• Dashboard de transparência</li>
-                  <li>• Primeiros investimentos</li>
+                  <li>• Regras do Programa + Política de Tesouraria</li>
+                  <li>• Distribuições iniciais (perks & kits)</li>
                 </ul>
               </CardContent>
             </Card>
 
             <Card className="fluorescent-card fade-in-left" data-delay="0.6s" >
               <CardContent className="p-8">
-                <Badge className="bg-yellow-500/20 text-yellow-400 mb-4">Q2 2024 - EM ANDAMENTO</Badge>
+                <Badge className="bg-yellow-500/20 text-yellow-400 mb-4">Q4 2025 - Q1 2026 - Expansão (pós mint)</Badge>
                 <h3 className="text-xl font-bold mb-4">Expansão</h3>
                 <ul className="text-white/70 space-y-2 text-sm">
-                  <li>• Primeira distribuição de lucros</li>
-                  <li>• Parcerias estratégicas</li>
-                  <li>• Eventos presenciais</li>
-                  <li>• Educação premium</li>
+                  <li>• Calendário de aulas premium e mentorias</li>
+                  <li>• Votações regulares</li>
+                  <li>• Perks trimestrais com parceiros</li>
+                  <li>• Meetups & networking de comunidade</li>
+                  <li>• Programa de vantagens: avaliar distribuições eventuais quando houver excedente de caixa e aprovação em governança</li>
                 </ul>
               </CardContent>
             </Card>
 
             <Card className="fluorescent-card fade-in-right" data-delay="0.6s" >
               <CardContent className="p-8">
-                <Badge className="bg-blue-500/20 text-blue-400 mb-4">Q3 2024 - PLANEJADO</Badge>
+                <Badge className="bg-blue-500/20 text-blue-400 mb-4">Q1 - Q2 - 2026 - Inovação (planejado)</Badge>
                 <h3 className="text-xl font-bold mb-4">Inovação</h3>
                 <ul className="text-white/70 space-y-2 text-sm">
-                  <li>• Plataforma de staking</li>
-                  <li>• Marketplace exclusivo</li>
-                  <li>• Token de governança</li>
-                  <li>• Expansão internacional</li>
+                  <li>• Marketplace de utilidades (whitelists, descontos, kits)</li>
+                  <li>• Delegação de voto e roles avançadas no Discord</li>
+                  <li>• Integrações on-chain (verificação e transparência)</li>
+                  <li>• Parcerias externas e cocriar trilhas com especialistas</li>
                 </ul>
               </CardContent>
             </Card>
 
             <Card className="fluorescent-card fade-in-right" data-delay="1s" >
               <CardContent className="p-8">
-                <Badge className="bg-purple-500/20 text-purple-400 mb-4">Q4 2024 - FUTURO</Badge>
+                <Badge className="bg-purple-500/20 text-purple-400 mb-4">Q3-Q4 2026 - Evolução (futuro)</Badge>
                 <h3 className="text-xl font-bold mb-4">Evolução</h3>
                 <ul className="text-white/70 space-y-2 text-sm">
-                  <li>• Metaverso CriptoOasis</li>
+                  <li>• Evento anual Cripto Oasis</li>
                   <li>• DAO completa</li>
-                  <li>• Fundo de investimento</li>
-                  <li>• Legado duradouro</li>
+                  <li>• Informe anual de desenvolvimento do ecossistema</li>
+                  <li>• Roadmap 2027 definido pela assembleia de holders</li>
                 </ul>
               </CardContent>
             </Card>
@@ -754,16 +552,6 @@ function App() {
           </div>
 
           <div className="space-y-6">
-            <Card className=" bg-white/5 border-white/10  fade-in-left" data-delay="0.6s" >
-              <CardContent className="p-8">
-                <h3 className="text-xl font-bold mb-4">Como funciona a renda passiva?</h3>
-                <p className="text-white/70">
-                  40% do capital arrecadado é investido em operações rentáveis (trading algorítmico, DeFi, investimentos estratégicos). 
-                  Os lucros são distribuídos trimestralmente para todos os holders de forma proporcional.
-                </p>
-              </CardContent>
-            </Card>
-
             <Card className="bg-white/5 border-white/10 fade-in-left" data-delay="0.9s">
               <CardContent className="p-8">
                 <h3 className="text-xl font-bold mb-4">Os benefícios são realmente vitalícios?</h3>
@@ -778,8 +566,7 @@ function App() {
               <CardContent className="p-8">
                 <h3 className="text-xl font-bold mb-4">Como posso acompanhar as operações?</h3>
                 <p className="text-white/70">
-                  Teremos um dashboard público onde todos podem acompanhar em tempo real as operações, performance dos investimentos 
-                  e distribuição de lucros. Transparência total é nosso compromisso.
+                  Teremos um dashboard público, onde todos poderão acompanhar a performance do ecossistema. Transparência total é o nosso compromisso.
                 </p>
               </CardContent>
             </Card>
