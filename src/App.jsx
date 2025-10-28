@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {useState, useEffect} from 'react';
 import { Button } from '@/components/ui/button.jsx';
 import { Card, CardContent } from '@/components/ui/card.jsx';
@@ -55,6 +56,48 @@ function App() {
   const [error, setError] = useState(null);
 
   // Smooth scroll function
+=======
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button.jsx';
+import { Card, CardContent } from '@/components/ui/card.jsx';
+import { Badge } from '@/components/ui/badge.jsx';
+import { Minus, Plus, ExternalLink, MessageCircle, Twitter, Globe, Users, DollarSign, Gift, BarChart3, Shield, TrendingUp, Award, BookOpen, Handshake, Eye } from 'lucide-react';
+import { useContract } from './hooks/useContract';
+import ParticleBackground from './components/ParticleBackground'
+import RetrowaveGrid from './components/RetrowaveGrid'
+import Navbar from './components/Navbar';
+import NavLogo from './components/NavLogo';
+import Footer from './components/Footer';
+import './App.css';
+import {useCountdown} from "@/hooks/useCountdown.js";
+import {ConnectButton, ClaimButton, lightTheme} from "thirdweb/react"
+import useScrollAnimation from "@/hooks/useScrollAnimation.js";
+import { initScrollAnimations } from "./utils/scrollAnimation.js";
+import LoadingScreen from './components/LoadingScreen';
+
+import {useThierdWeb} from "@/hooks/useThierdWeb.js";
+
+function App() {
+  useEffect(() => {
+    initScrollAnimations();
+  }, []);
+
+  const { contractData, mintNFT, getMintedByWallet, isLoading: contractLoading, isConnected } = useContract();
+  const timeLeft = useCountdown({ initialDays: 6, initialHours: 23, initialMinutes: 59, initialSeconds: 58 });
+
+  
+    const [isLoading, setIsLoading] = useState(true);
+  const [quantity, setQuantity] = useState(1);
+  const [isMinting, setIsMinting] = useState(false);
+  const [mintError, setMintError] = useState('');
+  const [mintSuccess, setMintSuccess] = useState('');
+  const [txHash, setTxHash] = useState('');
+  const [userMintedCount, setUserMintedCount] = useState(0);
+
+  const {client, account, chain} = useThierdWeb();
+
+>>>>>>> origin/development
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -62,6 +105,42 @@ function App() {
     }
   };
 
+<<<<<<< HEAD
+=======
+  useEffect(() => {
+    if (isConnected && account) {
+      getMintedByWallet(account?.address).then(count => {
+        setUserMintedCount(count);
+      });
+    }
+  }, [isConnected, account, getMintedByWallet]);
+
+  const handleMint = async () => {
+    if (!isConnected) {
+      setMintError('Por favor, conecte sua wallet primeiro');
+      return;
+    }
+
+    setIsMinting(true);
+    setMintError('');
+    setMintSuccess('');
+
+    try {
+      const result = await mintNFT(quantity);
+      setTxHash(result.hash);
+      setMintSuccess(`Mint realizado com sucesso! ${quantity} NFT(s) mintado(s).`);
+
+      const newCount = await getMintedByWallet(account?.address);
+      setUserMintedCount(newCount);
+    } catch (error) {
+      console.error('Erro no mint:', error);
+      setMintError(error.message || 'Erro ao realizar mint');
+    } finally {
+      setIsMinting(false);
+    }
+  };
+
+>>>>>>> origin/development
   const increaseQuantity = () => {
     if (quantity < 5 && quantity + userMintedCount < 5) {
       setQuantity(quantity + 1);
@@ -74,29 +153,29 @@ function App() {
     }
   };
 
-  const totalCost = (0.08 * quantity).toFixed(4);
+  const totalCost = (contractData.mintPrice * quantity).toFixed(4);
   const totalCostUSD = (300 * quantity).toFixed(2);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 text-white">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-black/20 backdrop-blur-md border-b border-white/10">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center font-bold text-black">
-              CO
-            </div>
-            <span className="text-xl font-bold">CRIPTO OASIS</span>
-          </div>
+    <>
+    <div className="min-h-screen relative overflow-x-hidden ">
+      {/* Retrowave static background */}
+    <div
+      className="absolute inset-0 z-0"
+      style={{
+        backgroundImage: `
+          linear-gradient(to bottom, #06011a7e 10%, #2d1147be 50%, #06011aff 100%),
+          url('/images/retrowave-bg.jpg')
+        `,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'scroll', 
+        backgroundRepeat: 'no-repeat',
+      }}
+    />
           
-          <div className="hidden md:flex space-x-6">
-            <button onClick={() => scrollToSection('mint')} className="hover:text-yellow-400 transition-colors">Mint</button>
-            <button onClick={() => scrollToSection('about')} className="hover:text-yellow-400 transition-colors">Sobre</button>
-            <button onClick={() => scrollToSection('benefits')} className="hover:text-yellow-400 transition-colors">Benefícios</button>
-            <button onClick={() => scrollToSection('roadmap')} className="hover:text-yellow-400 transition-colors">Roadmap</button>
-            <button onClick={() => scrollToSection('faq')} className="hover:text-yellow-400 transition-colors">FAQ</button>
-          </div>
 
+<<<<<<< HEAD
           <div className="flex items-center space-x-4">
             <a href="#" className="text-white/70 hover:text-white transition-colors">
               <Twitter size={20} />
@@ -118,22 +197,25 @@ function App() {
           </div>
         </div>
       </nav>
+=======
+      {/* Animated backgrounds */}
+      <ParticleBackground />
+      <RetrowaveGrid />
+      <div className='relative z-10'>
+      <Navbar showScrollButtons={true} scrollToSection={scrollToSection} />
+>>>>>>> origin/development
 
-      {/* Hero Section */}
-      <section id="hero" className="pt-24 pb-16 px-4">
-        <div className="container mx-auto text-center">
-          <div className="mb-8">
-            <div className="text-6xl mb-4">🌴</div>
-            <h1 className="text-6xl md:text-8xl font-bold mb-4">
-              <span className="text-white">CRIPTO</span>
-              <br />
-              <span className="text-yellow-400">OASIS</span>
-            </h1>
-            <p className="text-xl md:text-2xl text-white/80 max-w-4xl mx-auto mb-12">
-              Sua chave para o oásis da nova economia. NFT Genesis com benefícios reais, 
-              renda passiva e acesso vitalício a uma comunidade exclusiva de 350 membros.
-            </p>
+        <section id="hero" className="pt-24 pb-16 px-4 relative overflow-hidden ">
+          <div className="container mx-auto text-center max-w-5xl">
+            <div className="mb-6 fade-in-down" data-delay="0.8s">
+            <img
+              src="public/logo/logo.png"
+              alt="Cripto Oasis Logo"
+              className="mx-auto w-auto h-auto max-w-full mb-6"
+              
+            />
           </div>
+<<<<<<< HEAD
 
           {/* Countdown */}
           <div className="mb-12">
@@ -154,62 +236,74 @@ function App() {
               <div className="text-center">
                 <div className="text-4xl md:text-6xl font-bold text-yellow-400">{seconds.toString().padStart(2, '0')}</div>
                 <div className="text-sm text-white/60">Seconds</div>
+=======
+               <p className="text-xl md:text-2xl text-white/80 max-w-4xl mx-auto mb-12 fade-in-left"
+                data-delay="1s">
+            Sua chave para o oásis da nova economia. NFT Genesis com benefícios reais, renda passiva e acesso vitalício a uma comunidade exclusiva de 350 membros.
+          </p>
+            <div className="countdown-container max-w-2xl mx-auto mb-12 fade-in-up">
+              <p className="text-lg mb-6 font-normal">TEMPO RESTANTE PARA MINT ESPECIAL</p>
+              <div className="flex justify-center space-x-4 md:space-x-6">
+              {['days', 'hours', 'minutes', 'seconds'].map((unit, idx) => (
+                <div key={unit} className="text-center">
+                  <div className="bg-black/65 rounded-lg px-4 py-3 md:px-6 md:py-5 text-pink-500 text-3xl md:text-5xl font-extrabold tracking-wide ">
+                    {timeLeft[unit].toString().padStart(2, '0')}
+                  </div>
+                  <div className="text-[7px] md:text-xs text-pink-700 font-semibold tracking-widest mt-1 uppercase">
+                    {unit.charAt(0).toUpperCase() + unit.slice(1)}
+                  </div>
+                </div>
+              ))}
+>>>>>>> origin/development
               </div>
+            </div>
+
+
+          {/* Features Grid */}
+          <div className="flex flex-col md:flex-row justify-center items-stretch gap-6 mt-12 px-4 md:px-0">
+            <div className="fluorescent-card rounded-xl fade-in-up" data-delay="0.5s">
+              <Users className="w-8 h-8 text-yellow-400 mb-2" />
+              <h3 className="text-green-400 font-bold">350 Únicos</h3>
+              <p className="text-white/60 text-sm">Comunidade exclusiva limitada</p>
+            </div>
+
+            <div className="fluorescent-card rounded-xl fade-in-down" data-delay="0.7s">
+              <DollarSign className="w-8 h-8 text-yellow-400 mb-2" />
+              <h3 className="text-green-400 font-bold">Renda Passiva</h3>
+              <p className="text-white/60 text-sm">6-10% ROI anual projetado</p>
+            </div>
+
+            <div className="fluorescent-card  rounded-xl fade-in-up" data-delay="0.9s">
+              <Gift className="w-8 h-8 text-yellow-400 mb-2" />
+              <h3 className="text-green-400 font-bold">Benefícios VIP</h3>
+              <p className="text-white/60 text-sm">Acesso vitalício e brindes</p>
+            </div>
+
+            <div className="fluorescent-card rounded-xl fade-in-down" data-delay="1.1s">
+              <BarChart3 className="w-8 h-8 text-yellow-400 mb-2" />
+              <h3 className="text-green-400 font-bold">Transparência</h3>
+              <p className="text-white/60 text-sm">Dashboard público em tempo real</p>
             </div>
           </div>
 
-          {/* Features Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="fluorescent-card">
-              <CardContent className="p-8 text-center">
-                <Users className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
-                <h3 className="text-2xl font-bold text-yellow-400 mb-2">350 Únicos</h3>
-                <p className="text-white/70">Comunidade exclusiva limitada</p>
-              </CardContent>
-            </Card>
 
-            <Card className="fluorescent-card">
-              <CardContent className="p-8 text-center">
-                <DollarSign className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
-                <h3 className="text-2xl font-bold text-yellow-400 mb-2">Renda Passiva</h3>
-                <p className="text-white/70">6-10% ROI anual projetado</p>
-              </CardContent>
-            </Card>
-
-            <Card className="fluorescent-card">
-              <CardContent className="p-8 text-center">
-                <Gift className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
-                <h3 className="text-2xl font-bold text-yellow-400 mb-2">Benefícios VIP</h3>
-                <p className="text-white/70">Acesso vitalício e brindes</p>
-              </CardContent>
-            </Card>
-
-            <Card className="fluorescent-card">
-              <CardContent className="p-8 text-center">
-                <BarChart3 className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
-                <h3 className="text-2xl font-bold text-yellow-400 mb-2">Transparência</h3>
-                <p className="text-white/70">Dashboard público em tempo real</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              onClick={() => scrollToSection('mint')}
-              size="lg" 
-              className="fluorescent-button bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-lg px-8 py-4"
-            >
-              MINT AGORA - $300
-            </Button>
-            <Button 
-              onClick={() => scrollToSection('about')}
-              variant="outline" 
-              size="lg" 
-              className="fluorescent-button border-white/30 text-white hover:bg-white/10 text-lg px-8 py-4"
-            >
-              Saiba Mais
-            </Button>
-          </div>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
+              <Button 
+                onClick={() => scrollToSection('mint')}
+                size="lg" 
+                className="fluorescent-button bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-lg px-8 py-4 text-white font-bold fade-in-left" data-delay="0.8s"
+              >
+                MINT AGORA - $300
+              </Button>
+              <Button 
+                onClick={() => scrollToSection('about')}
+                variant="outline" 
+                size="lg" 
+                className="fluorescent-button border-pink-400/50 text-white hover:bg-pink-500/20 text-lg px-8 py-4 fade-in-right" data-delay="1s"
+              >
+                Saiba Mais
+              </Button>
+            </div>
         </div>
       </section>
 
@@ -217,11 +311,10 @@ function App() {
       <section id="about" className="py-16 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold mb-8">
-              <span className="text-orange-400">SOBRE O</span>{' '}
-              <span className="text-purple-400">PROJETO</span>
+            <h2 className="text-4xl md:text-6xl font-bold mb-8 gradient-text fade-in-left" data-delay="0.5s">
+              SOBRE O PROJETO
             </h2>
-            <p className="text-xl text-white/80 max-w-4xl mx-auto">
+            <p className="text-xl text-white/80 max-w-4xl mx-auto fade-in-right" data-delay="0.7s">
               CriptoOasis Genesis não é apenas uma NFT - é seu passaporte para uma nova forma de investir e participar da 
               economia digital. Combinamos arte exclusiva com utilidade real, criando valor tangível para uma comunidade seleta de holders.
             </p>
@@ -229,18 +322,18 @@ function App() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h3 className="text-2xl font-bold text-yellow-400 mb-6">O Diferencial</h3>
-              <p className="text-white/80 mb-6">
+              <h3 className="text-2xl font-bold text-yellow-400 mb-6 fade-in-down" data-delay="0.5s">O Diferencial</h3>
+              <p className="text-white/80 mb-6 fade-in-left" data-delay="0.6s">
                 Enquanto 99% dos projetos NFT prometem utilidade futura que nunca se materializa, 
                 CriptoOasis Genesis entrega valor real desde o primeiro dia.
               </p>
-              <p className="text-white/80 mb-8">
+              <p className="text-white/80 mb-8 fade-in-left" data-delay="0.7s">
                 Nossa abordagem combina exclusividade garantida (apenas 350 unidades), transparência total 
                 (dashboard público) e benefícios tangíveis (renda passiva + brindes).
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-white/5 p-6 rounded-lg border border-white/10">
+                <div className="bg-white/5 p-6 rounded-lg border border-white/10 fade-in-left" data-delay="0.5s">
                   <Eye className="w-8 h-8 text-blue-400 mb-3" />
                   <h4 className="font-bold mb-2">Transparência Total</h4>
                   <p className="text-sm text-white/70">
@@ -248,7 +341,7 @@ function App() {
                   </p>
                 </div>
 
-                <div className="bg-white/5 p-6 rounded-lg border border-white/10">
+                <div className="bg-white/5 p-6 rounded-lg border border-white/10 fade-in-right" data-delay="0.5s">
                   <TrendingUp className="w-8 h-8 text-green-400 mb-3" />
                   <h4 className="font-bold mb-2">Modelo Sustentável</h4>
                   <p className="text-sm text-white/70">
@@ -256,7 +349,7 @@ function App() {
                   </p>
                 </div>
 
-                <div className="bg-white/5 p-6 rounded-lg border border-white/10">
+                <div className="bg-white/5 p-6 rounded-lg border border-white/10 fade-in-left" data-delay="0.7s">
                   <Users className="w-8 h-8 text-purple-400 mb-3" />
                   <h4 className="font-bold mb-2">Comunidade Exclusiva</h4>
                   <p className="text-sm text-white/70">
@@ -264,7 +357,7 @@ function App() {
                   </p>
                 </div>
 
-                <div className="bg-white/5 p-6 rounded-lg border border-white/10">
+                <div className="bg-white/5 p-6 rounded-lg border border-white/10 fade-in-right" data-delay="0.7s">
                   <Gift className="w-8 h-8 text-yellow-400 mb-3" />
                   <h4 className="font-bold mb-2">Benefícios Reais</h4>
                   <p className="text-sm text-white/70">
@@ -275,27 +368,31 @@ function App() {
             </div>
 
             <div className="text-center">
-              <div className="relative w-64 h-64 mx-auto mb-8">
-                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-orange-500 to-purple-600 rounded-full animate-spin-slow"></div>
-                <div className="absolute inset-2 bg-gradient-to-br from-purple-900 to-blue-900 rounded-full flex items-center justify-center">
-                  <div className="text-6xl">🏝️</div>
+              <div className="relative w-64 h-64 mx-auto mb-8 fade-in-right" data-delay="0.8s">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#E32988] via-[#00FF7B] to-[#471D73] rounded-full animate-spin-slow"></div>
+                <div className="absolute inset-2 bg-gradient-to-br from-purple-900 to-blue-900 rounded-full flex items-center justify-center overflow-hidden">
+                  <img
+                    src="/images/token.png" // Adjust the path to your token.png file
+                    alt="Token"
+                    className="w-full h-full object-contain" // Ensure image fits within the circle without distortion
+                  />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-6">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-yellow-400">350</div>
+                <div className="text-center fade-in-right" data-delay="0.7s">
+                  <div className="text-3xl font-bold text-yellow-400 ">350</div>
                   <div className="text-sm text-white/60">NFTs Únicos</div>
                 </div>
-                <div className="text-center">
+                <div className="text-center fade-in-right" data-delay="0.8s">
                   <div className="text-3xl font-bold text-yellow-400">$300</div>
                   <div className="text-sm text-white/60">Preço de Mint</div>
                 </div>
-                <div className="text-center">
+                <div className="text-center fade-in-right" data-delay="1s">
                   <div className="text-3xl font-bold text-yellow-400">6-10%</div>
                   <div className="text-sm text-white/60">ROI Anual</div>
                 </div>
-                <div className="text-center">
+                <div className="text-center fade-in-right" data-delay="1.1s">
                   <div className="text-3xl font-bold text-yellow-400">$1K</div>
                   <div className="text-sm text-white/60">Benefícios/Ano</div>
                 </div>
@@ -308,20 +405,21 @@ function App() {
       {/* Mint Section */}
       <section id="mint" className="py-16 px-4">
         <div className="container mx-auto max-w-2xl">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">MINT OFICIAL</h2>
-            <p className="text-xl text-white/80">
+          <div className="text-center mb-12 ">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 gradient-text fade-in-up" data-delay="0.5s">MINT OFICIAL</h2>
+            <p className="text-xl text-white/80 fade-in-left" data-delay="0.7s">
               Garanta sua NFT CriptoOasis Genesis e torne-se membro vitalício da comunidade mais exclusiva do cripto.
             </p>
           </div>
 
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+          <Card className="bg-black/65 border-white/10 backdrop-blur-sm fade-in-up" data-delay="0.9s">
             <CardContent className="p-8">
               <h3 className="text-2xl font-bold mb-6 text-center">MINT CRIPTOOASIS GENESIS</h3>
               
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
                   <span className="text-white/70">Mintados</span>
+<<<<<<< HEAD
                   <span className="font-bold">{ totalClaimedSupply } / { totalSupply }</span>
                 </div>
                 
@@ -331,6 +429,17 @@ function App() {
                 
                 <div className="text-center text-white/70">
                   { totalUnclaimedSupply } NFTs restantes
+=======
+                  <span className="font-bold">{ contractData.currentSupply } / { contractData.maxSupply }</span>
+                </div>
+                
+                <div className="w-full bg-white/10 rounded-full h-2">
+                  <div className="bg-gradient-to-r from-green-500 to-emerald-600 h-2 rounded-full" style={{width: (contractData.currentSupply / contractData.maxSupply * 100) + '%'}}></div>
+                </div>
+                
+                <div className="text-center text-white/70">
+                  { contractData.maxSupply - contractData.currentSupply } NFTs restantes
+>>>>>>> origin/development
                 </div>
 
                 <div className="border-t border-white/10 pt-6">
@@ -348,7 +457,7 @@ function App() {
                           disabled={quantity <= 1}
                           variant="outline"
                           size="sm"
-                          className="border-white/30 text-white hover:bg-white/10"
+                          className="border-white/30 text-white hover:bg-white/10 fade-in-left" data-delay="1.1s"
                         >
                           <Minus className="w-4 h-4" />
                         </Button>
@@ -358,7 +467,7 @@ function App() {
                           disabled={quantity >= 5 || quantity >= totalUnclaimedSupply}
                           variant="outline"
                           size="sm"
-                          className="border-white/30 text-white hover:bg-white/10"
+                          className="border-white/30 text-white hover:bg-white/10 fade-in-right" data-delay="1.3s"
                         >
                           <Plus className="w-4 h-4" />
                         </Button>
@@ -375,11 +484,16 @@ function App() {
                         </div>
                       </div>
 
+<<<<<<< HEAD
                       {!account ? (
+=======
+                      {!isConnected ? (
+>>>>>>> origin/development
                           <div className="text-center"><ConnectButton client={client} theme={lightTheme({
                             colors: {
                               modalBg: "white",
                             },
+<<<<<<< HEAD
                           })} chain={contract.chain}/></div>
                       ) : (
                           contract &&
@@ -427,6 +541,50 @@ function App() {
                       {success && (
                           <div className="mt-4 p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
                             <p className="text-green-300 text-sm">NFT mintada com sucesso!</p>
+=======
+                          })} chain={chain}/></div>
+                      ) : (
+                          <Button
+                              onClick={handleMint}
+                              disabled={isMinting || contractLoading || quantity + userMintedCount >= 5}
+                              className="fluorescent-button w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                          size="lg"
+                        >
+                          {isMinting ? 'Mintando...' : `Mint ${quantity} NFT${quantity > 1 ? 's' : ''}`}
+                        </Button>
+                      )}
+
+                      {isConnected && (
+                          <div className="mt-4 text-center">
+                            <p className="text-sm text-white/70">
+                              Wallet conectada: {account?.address?.slice(0, 6)}...{account?.address?.slice(-4)}
+                            </p>
+                            <p className="text-xs text-white/60">
+                              Você já mintou: {userMintedCount}/5 NFTs
+                            </p>
+                          </div>
+                      )}
+
+                      {mintError && (
+                          <div className="mt-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
+                            <p className="text-red-300 text-sm">{mintError}</p>
+                          </div>
+                      )}
+
+                      {mintSuccess && (
+                          <div className="mt-4 p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
+                            <p className="text-green-300 text-sm">{mintSuccess}</p>
+                            {txHash && (
+                                <a
+                                    href={`https://etherscan.io/tx/${txHash}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-green-300 hover:text-green-200 text-xs flex items-center mt-2"
+                                >
+                                  Ver transação <ExternalLink className="w-3 h-3 ml-1"/>
+                                </a>
+                            )}
+>>>>>>> origin/development
                           </div>
                       )}
                     </div>
@@ -447,14 +605,14 @@ function App() {
       <section id="benefits" className="py-16 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold mb-8">BENEFÍCIOS EXCLUSIVOS</h2>
-            <p className="text-xl text-white/80 max-w-3xl mx-auto">
+            <h2 className="text-4xl md:text-6xl font-bold mb-8 gradient-text fade-in-up" data-delay="0.7s">BENEFÍCIOS EXCLUSIVOS</h2>
+            <p className="text-xl text-white/80 max-w-3xl mx-auto fade-in-left" data-delay="0.9s">
               Holders da CriptoOasis Genesis desfrutam de benefícios únicos e vitalícios
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="fluorescent-card">
+            <Card className="fluorescent-card fade-in-left" data-delay="1.2s" >
               <CardContent className="p-8">
                 <DollarSign className="w-12 h-12 text-green-400 mb-4" />
                 <h3 className="text-xl font-bold mb-4">Renda Passiva</h3>
@@ -465,7 +623,7 @@ function App() {
               </CardContent>
             </Card>
 
-            <Card className="fluorescent-card">
+            <Card className="fluorescent-card fade-in-left" data-delay="0.8s" >
               <CardContent className="p-8">
                 <Award className="w-12 h-12 text-purple-400 mb-4" />
                 <h3 className="text-xl font-bold mb-4">Acesso VIP</h3>
@@ -476,7 +634,7 @@ function App() {
               </CardContent>
             </Card>
 
-            <Card className="fluorescent-card">
+            <Card className="fluorescent-card fade-in-left" data-delay="0.4s" >
               <CardContent className="p-8">
                 <Gift className="w-12 h-12 text-yellow-400 mb-4" />
                 <h3 className="text-xl font-bold mb-4">Brindes Físicos</h3>
@@ -487,7 +645,7 @@ function App() {
               </CardContent>
             </Card>
 
-            <Card className="fluorescent-card">
+            <Card className="fluorescent-card fade-in-right" data-delay="1.2s" >
               <CardContent className="p-8">
                 <BookOpen className="w-12 h-12 text-blue-400 mb-4" />
                 <h3 className="text-xl font-bold mb-4">Educação Premium</h3>
@@ -498,7 +656,7 @@ function App() {
               </CardContent>
             </Card>
 
-            <Card className="fluorescent-card">
+            <Card className="fluorescent-card fade-in-right" data-delay="0.8s" >
               <CardContent className="p-8">
                 <Handshake className="w-12 h-12 text-orange-400 mb-4" />
                 <h3 className="text-xl font-bold mb-4">Networking Elite</h3>
@@ -509,7 +667,7 @@ function App() {
               </CardContent>
             </Card>
 
-            <Card className="fluorescent-card">
+            <Card className="fluorescent-card fade-in-right" data-delay="0.4s" >
               <CardContent className="p-8">
                 <Eye className="w-12 h-12 text-cyan-400 mb-4" />
                 <h3 className="text-xl font-bold mb-4">Transparência Total</h3>
@@ -522,80 +680,18 @@ function App() {
           </div>
         </div>
       </section>
-
-      {/* FAQ Section */}
-      <section id="faq" className="py-16 px-4">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold mb-8">PERGUNTAS FREQUENTES</h2>
-          </div>
-
-          <div className="space-y-6">
-            <Card className="fluorescent-card">
-              <CardContent className="p-8">
-                <h3 className="text-xl font-bold mb-4">Como funciona a renda passiva?</h3>
-                <p className="text-white/70">
-                  40% do capital arrecadado é investido em operações rentáveis (trading algorítmico, DeFi, investimentos estratégicos). 
-                  Os lucros são distribuídos trimestralmente para todos os holders de forma proporcional.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="fluorescent-card">
-              <CardContent className="p-8">
-                <h3 className="text-xl font-bold mb-4">Os benefícios são realmente vitalícios?</h3>
-                <p className="text-white/70">
-                  Sim! Uma vez holder, você mantém acesso permanente ao grupo VIP, distribuição de lucros, brindes e todos os benefícios. 
-                  Não há taxas recorrentes ou renovações.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="fluorescent-card">
-              <CardContent className="p-8">
-                <h3 className="text-xl font-bold mb-4">Como posso acompanhar as operações?</h3>
-                <p className="text-white/70">
-                  Teremos um dashboard público onde todos podem acompanhar em tempo real as operações, performance dos investimentos 
-                  e distribuição de lucros. Transparência total é nosso compromisso.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="fluorescent-card">
-              <CardContent className="p-8">
-                <h3 className="text-xl font-bold mb-4">Qual a diferença para outras NFTs?</h3>
-                <p className="text-white/70">
-                  Enquanto a maioria promete utilidade futura, nós entregamos valor real desde o dia 1. Modelo econômico sustentável, 
-                  transparência total e benefícios tangíveis comprovados.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="fluorescent-card">
-              <CardContent className="p-8">
-                <h3 className="text-xl font-bold mb-4">Posso vender minha NFT depois?</h3>
-                <p className="text-white/70">
-                  Sim, as NFTs podem ser negociadas normalmente no OpenSea e outras plataformas. O novo proprietário automaticamente 
-                  herda todos os benefícios e direitos.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Roadmap Section */}
+          {/* Roadmap Section */}
       <section id="roadmap" className="py-16 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold mb-8">ROADMAP</h2>
-            <p className="text-xl text-white/80 max-w-3xl mx-auto">
+            <h2 className="text-4xl md:text-6xl font-bold mb-8 fade-in-up" data-delay="0.4s" >ROADMAP</h2>
+            <p className="text-xl text-white/80 max-w-3xl mx-auto fade-in-down" data-delay="0.6s" >
               Nossa jornada para construir o oásis da nova economia digital
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="fluorescent-card">
+            <Card className="fluorescent-card fade-in-left" data-delay="1s">
               <CardContent className="p-8">
                 <Badge className="bg-green-500/20 text-green-400 mb-4">Q1 2024 - CONCLUÍDO</Badge>
                 <h3 className="text-xl font-bold mb-4">Lançamento</h3>
@@ -608,7 +704,7 @@ function App() {
               </CardContent>
             </Card>
 
-            <Card className="fluorescent-card">
+            <Card className="fluorescent-card fade-in-left" data-delay="0.6s" >
               <CardContent className="p-8">
                 <Badge className="bg-yellow-500/20 text-yellow-400 mb-4">Q2 2024 - EM ANDAMENTO</Badge>
                 <h3 className="text-xl font-bold mb-4">Expansão</h3>
@@ -621,7 +717,7 @@ function App() {
               </CardContent>
             </Card>
 
-            <Card className="fluorescent-card">
+            <Card className="fluorescent-card fade-in-right" data-delay="0.6s" >
               <CardContent className="p-8">
                 <Badge className="bg-blue-500/20 text-blue-400 mb-4">Q3 2024 - PLANEJADO</Badge>
                 <h3 className="text-xl font-bold mb-4">Inovação</h3>
@@ -634,7 +730,7 @@ function App() {
               </CardContent>
             </Card>
 
-            <Card className="fluorescent-card">
+            <Card className="fluorescent-card fade-in-right" data-delay="1s" >
               <CardContent className="p-8">
                 <Badge className="bg-purple-500/20 text-purple-400 mb-4">Q4 2024 - FUTURO</Badge>
                 <h3 className="text-xl font-bold mb-4">Evolução</h3>
@@ -650,34 +746,74 @@ function App() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 px-4 border-t border-white/10">
-        <div className="container mx-auto text-center">
-          <div className="flex items-center justify-center space-x-2 mb-6">
-            <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center font-bold text-black">
-              CO
-            </div>
-            <span className="text-xl font-bold">CRIPTO OASIS</span>
+      {/* FAQ Section */}
+      <section id="faq" className="py-16 px-4">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-6xl font-bold mb-8 gradient-text fade-in-right" data-delay="0.6s" >PERGUNTAS FREQUENTES</h2>
           </div>
-          
-          <div className="flex justify-center space-x-6 mb-6">
-            <a href="#" className="text-white/70 hover:text-white transition-colors">
-              <Twitter size={24} />
-            </a>
-            <a href="#" className="text-white/70 hover:text-white transition-colors">
-              <MessageCircle size={24} />
-            </a>
-            <a href="#" className="text-white/70 hover:text-white transition-colors">
-              <Globe size={24} />
-            </a>
+
+          <div className="space-y-6">
+            <Card className=" bg-white/5 border-white/10  fade-in-left" data-delay="0.6s" >
+              <CardContent className="p-8">
+                <h3 className="text-xl font-bold mb-4">Como funciona a renda passiva?</h3>
+                <p className="text-white/70">
+                  40% do capital arrecadado é investido em operações rentáveis (trading algorítmico, DeFi, investimentos estratégicos). 
+                  Os lucros são distribuídos trimestralmente para todos os holders de forma proporcional.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white/5 border-white/10 fade-in-left" data-delay="0.9s">
+              <CardContent className="p-8">
+                <h3 className="text-xl font-bold mb-4">Os benefícios são realmente vitalícios?</h3>
+                <p className="text-white/70">
+                  Sim! Uma vez holder, você mantém acesso permanente ao grupo VIP, distribuição de lucros, brindes e todos os benefícios. 
+                  Não há taxas recorrentes ou renovações.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white/5 border-white/10  fade-in-left" data-delay="0.8s">
+              <CardContent className="p-8">
+                <h3 className="text-xl font-bold mb-4">Como posso acompanhar as operações?</h3>
+                <p className="text-white/70">
+                  Teremos um dashboard público onde todos podem acompanhar em tempo real as operações, performance dos investimentos 
+                  e distribuição de lucros. Transparência total é nosso compromisso.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white/5 border-white/10 fade-in-left" data-delay="0.7s">
+              <CardContent className="p-8">
+                <h3 className="text-xl font-bold mb-4">Qual a diferença para outras NFTs?</h3>
+                <p className="text-white/70">
+                  Enquanto a maioria promete utilidade futura, nós entregamos valor real desde o dia 1. Modelo econômico sustentável, 
+                  transparência total e benefícios tangíveis comprovados.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white/5 border-white/10 fade-in-left" data-delay="0.6s">
+              <CardContent className="p-8">
+                <h3 className="text-xl font-bold mb-4">Posso vender minha NFT depois?</h3>
+                <p className="text-white/70">
+                  Sim, as NFTs podem ser negociadas normalmente no OpenSea e outras plataformas. O novo proprietário automaticamente 
+                  herda todos os benefícios e direitos.
+                </p>
+              </CardContent>
+            </Card>
           </div>
-          
-          <p className="text-white/60 text-sm">
-            © 2024 CriptoOasis Genesis. Todos os direitos reservados.
-          </p>
         </div>
-      </footer>
+      </section>
+
+  
+
+      {/* Footer */}
+          <Footer/>
+      </div>
     </div>
+    </>
   );
 }
 

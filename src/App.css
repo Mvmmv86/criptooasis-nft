@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Jura:wght@300..700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -82,7 +83,8 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    /* CHANGE THIS LINE */
+    font-family: 'Jura', sans-serif; /* Changed from 'Inter' to 'Jura' */
   }
 }
 
@@ -102,7 +104,7 @@
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(45deg, #fbbf24, #f59e0b, #d97706);
+  background: linear-gradient(45deg, #471D73, #FCC800, #E32988);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -137,12 +139,19 @@
 .fluorescent-card {
   position: relative;
   transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
+  min-width: 350px;
+  min-height: 190px;
 }
 
+/* Glow animado nas bordas */
 .fluorescent-card::before {
   content: '';
   position: absolute;
@@ -150,37 +159,28 @@
   left: -2px;
   right: -2px;
   bottom: -2px;
-  background: linear-gradient(45deg, 
-    #ff00ff, /* magenta */
-    #00ffff, /* cyan */
-    #ff0080, /* pink */
-    #8000ff, /* purple */
-    #ff4000, /* orange */
-    #00ff40, /* green */
-    #4000ff, /* blue */
-    #ff0040  /* red */
-  );
-  background-size: 400% 400%;
+  /* Enhanced Linear Gradient with new colors and repeated for smoother flow */
+/* Keep this for the flowing effect */
   border-radius: inherit;
   z-index: -1;
   opacity: 0;
-  transition: all 0.3s ease;
-  animation: fluorescent-flow 3s ease-in-out infinite;
+  transition: all 0.3s ease; /* Shorten transition for snappier hover */
+  animation: fluorescent-flow 10s ease-in-out infinite; /* Keep animation */
+  filter: blur(100px); /* Add blur by default for the effect, will be sharpened on hover */
 }
 
 .fluorescent-card:hover::before {
   opacity: 1;
-  filter: blur(0px);
+  filter: blur(0);
 }
 
 .fluorescent-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 
-    0 10px 30px rgba(0, 0, 0, 0.3),
-    0 0 20px rgba(255, 0, 255, 0.3),
-    0 0 40px rgba(0, 255, 255, 0.2);
+  transform: translateY(-6px);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.3),
+    0 0 25px rgba(255, 0, 255, 0.925),
+    0 0 50px #fcca007e;
 }
-
 /* Fluorescent animation */
 @keyframes fluorescent-flow {
   0%, 100% {
@@ -206,15 +206,15 @@
   right: -2px;
   bottom: -2px;
   background: linear-gradient(45deg, 
-    #ff00ff, #00ffff, #ff0080, #8000ff,
-    #ff4000, #00ff40, #4000ff, #ff0040
+    #ff00ff, #8000ff,
+    #FCC800
   );
   background-size: 400% 400%;
   border-radius: inherit;
   z-index: -1;
   opacity: 0;
   transition: all 0.3s ease;
-  animation: fluorescent-flow 2s ease-in-out infinite;
+  animation: fluorescent-flow 4s ease-in-out infinite;
 }
 
 .fluorescent-button:hover::before {
@@ -264,7 +264,209 @@
   animation: spin 1s linear infinite;
 }
 
+
+
+/* Base fade-in */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Fade in from Bottom */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px); /* Adjust distance as needed */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade in from Top */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade in from Left */
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Fade in from Right */
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Generic animation class (you'll use specific ones like .fade-in-up) */
+.animate-on-load {
+  /* REMOVED: opacity: 0; */ /* <--- THIS IS THE KEY CHANGE */
+  animation-fill-mode: forwards; /* Keep the end state */
+  /* Add an initial transition property for a smoother hide/show by JS before animation starts */
+  transition: opacity 0.01s ease-out; /* A very short transition helps prevent flicker */
+}
+
+
+/* Specific animation classes with default durations/easings */
+.fade-in {
+  opacity: 0;
+  animation-name: fadeIn;
+  animation-duration: 1s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;  /* mantém estado final */
+  animation-play-state: paused;   /* começa pausado */
+}
+
+.fade-in-up {
+  opacity: 0;
+  animation-name: fadeInUp;
+  animation-duration: 1s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+  animation-play-state: paused;
+}
+
+.fade-in-down {
+  opacity: 0;
+  animation-name: fadeInDown;
+  animation-duration: 1s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+  animation-play-state: paused;
+}
+
+.fade-in-left {
+  opacity: 0;
+  animation-name: fadeInLeft;
+  animation-duration: 1s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+  animation-play-state: paused;
+}
+
+.fade-in-right {
+  opacity: 0;
+  animation-name: fadeInRight;
+  animation-duration: 1s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+  animation-play-state: paused;
+}
+
+/* Delay utility classes (extend as needed) */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-600 { animation-delay: 0.6s; }
+.delay-700 { animation-delay: 0.7s; }
+.delay-800 { animation-delay: 0.8s; }
+.delay-900 { animation-delay: 0.9s; }
+.delay-1000 { animation-delay: 1s; }
+.delay-1200 { animation-delay: 1.2s; }
+.delay-1500 { animation-delay: 1.5s; }
+.delay-1800 { animation-delay: 1.8s; }
+.delay-2000 { animation-delay: 2s; }
+
+
+/* Duration utility classes (extend as needed) */
+.duration-500 { animation-duration: 0.5s; }
+.duration-800 { animation-duration: 0.8s; }
+.duration-1000 { animation-duration: 1s; }
+.duration-1200 { animation-duration: 1.2s; }
+.duration-1500 { animation-duration: 1.5s; }
+
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.hidden-before-scroll {
+  opacity: 0;
+  transform: translateY(0px); /* ou 0 se não quiser deslocamento */
+}
+
+/* Estado final: visível */
+.visible-on-scroll {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+/* Estado final quando aparece */
+.show {
+  animation-play-state: running !important;
+}
+
+/* Elementos escondidos inicialmente (opcional para garantir) */
+.fade-in, .fade-in-left, .fade-in-right, .fade-in-up, .fade-in-down {
+  opacity: 0;
+}
+
+/* Exemplo: pode ajustar a posição inicial para cada direção */
+.fade-in-left { transform: translateX(-20px); }
+.fade-in-right { transform: translateX(20px); }
+.fade-in-up { transform: translateY(20px); }
+.fade-in-down { transform: translateY(-20px); }
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
 }

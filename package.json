@@ -51,6 +51,7 @@
     "react": "^19.1.0",
     "react-day-picker": "9.8.0",
     "react-dom": "^19.1.0",
+<<<<<<< HEAD
     "react-hook-form": "^7.61.1",
     "react-resizable-panels": "^3.0.3",
     "react-router-dom": "^7.7.1",
@@ -59,6 +60,16 @@
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.11",
     "thirdweb": "^5.105.21",
+=======
+    "react-hook-form": "^7.56.3",
+    "react-resizable-panels": "^3.0.2",
+    "react-router-dom": "^7.8.1",
+    "recharts": "^2.15.3",
+    "sonner": "^2.0.3",
+    "tailwind-merge": "^3.3.0",
+    "tailwindcss": "^4.1.7",
+    "thirdweb": "^5.105.23",
+>>>>>>> origin/development
     "vaul": "^1.1.2",
     "zod": "^4.0.10"
   },
