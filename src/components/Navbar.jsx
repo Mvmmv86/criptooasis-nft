@@ -36,10 +36,10 @@ const Navbar = ({ showScrollButtons = false, scrollToSection }) => {
         </div>
 
         <div className="flex items-center space-x-4">
-          <a href="#" className="text-white/70 hover:text-white transition-colors">
+          <a href="https://x.com/criptomemebr" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors">
             <Twitter size={20}/>
           </a>
-          <a href="#" className="text-white/70 hover:text-white transition-colors">
+          <a href="https://discord.gg/rnyS7NmyfY" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors">
             <MessageCircle size={20}/>
           </a>
             <div><ConnectButton client={client} theme={lightTheme({

@@ -1,42 +1,38 @@
 import { useEffect, useState } from 'react';
 
-export function useCountdown({ initialDays = 0, initialHours = 0, initialMinutes = 0, initialSeconds = 0 }) {
-    const [timeLeft, setTimeLeft] = useState({
-        days: initialDays,
-        hours: initialHours,
-        minutes: initialMinutes,
-        seconds: initialSeconds,
-    });
+export function useCountdown({ targetDate }) {
+    const calculateTimeLeft = () => {
+        const now = new Date().getTime();
+        const target = new Date(targetDate).getTime();
+        const difference = target - now;
+
+        if (difference <= 0) {
+            return {
+                days: 0,
+                hours: 0,
+                minutes: 0,
+                seconds: 0,
+                isExpired: true
+            };
+        }
+
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+        return { days, hours, minutes, seconds, isExpired: false };
+    };
+
+    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
     useEffect(() => {
         const timer = setInterval(() => {
-            setTimeLeft(prev => {
-                let { days, hours, minutes, seconds } = prev;
-
-                if (seconds > 0) {
-                    seconds--;
-                } else if (minutes > 0) {
-                    minutes--;
-                    seconds = 59;
-                } else if (hours > 0) {
-                    hours--;
-                    minutes = 59;
-                    seconds = 59;
-                } else if (days > 0) {
-                    days--;
-                    hours = 23;
-                    minutes = 59;
-                    seconds = 59;
-                } else {
-                    clearInterval(timer); // stop if all reach 0
-                }
-
-                return { days, hours, minutes, seconds };
-            });
+            setTimeLeft(calculateTimeLeft());
         }, 1000);
 
         return () => clearInterval(timer);
-    }, []);
+    }, [targetDate]);
 
     return timeLeft;
 }
