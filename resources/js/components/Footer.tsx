@@ -12,17 +12,17 @@ const Footer = () => {
         </div>
 
         <div className="flex justify-center space-x-6 mb-6">
-          <a href="#" className="text-white/70 hover:text-white transition-colors" aria-label="Twitter">
+          <a href="https://x.com/criptomemebr" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors" aria-label="Twitter">
             <Twitter size={24} />
           </a>
-          <a href="#" className="text-white/70 hover:text-white transition-colors">
+          <a href="https://discord.gg/rnyS7NmyfY" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors">
             <img
               src="/icons/discord.png"
               alt="Discord"
               className="w-5 h-5 object-contain"
             />
           </a>
-                  </div>
+        </div>
 
         <p className="text-white/60 text-sm">
           © 2025 CriptoOasis Genesis. Todos os direitos reservados.
