@@ -12,12 +12,12 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: '/dashboard',
         icon: LayoutGrid,
-    },
-    {
-        title: 'Ranking',
-        href: '/dashboard/ranking',
-        icon: ChartNoAxesCombined,
-    },
+    }
+    // {
+    //     title: 'Ranking',
+    //     href: '/dashboard/ranking',
+    //     icon: ChartNoAxesCombined,
+    // },
 ];
 
 const footerNavItems: NavItem[] = [
