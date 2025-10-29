@@ -11,7 +11,7 @@ export function useCountdown() {
     const [timeFinished, setTimeFinished] = useState(false);
 
     useEffect(() => {
-        const futureDate = new Date('2025-10-29T00:00:00');
+        const futureDate = new Date('2025-11-01T12:00:00');
         const now = new Date();
 
         const timeRemaining = futureDate.getTime() - now;
