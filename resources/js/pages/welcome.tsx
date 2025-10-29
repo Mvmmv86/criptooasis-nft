@@ -23,8 +23,7 @@ export default function Welcome() {
     }, []);
 
     const { contractData, mintNFT, fetchMintedPerWallet, isLoading: contractLoading, isConnected, fetchContractData } = useContract();
-    const timeLeft = useCountdown({ initialDays: 6, initialHours: 23, initialMinutes: 59, initialSeconds: 58 });
-
+    const { timeLeft, timeFinished } = useCountdown();
 
     const [isLoading, setIsLoading] = useState(true);
     const [quantity, setQuantity] = useState(1);
@@ -57,6 +56,11 @@ export default function Welcome() {
     }
 
     const handleMint = async () => {
+        if (!timeFinished) {
+            setMintError('Por favor, aguarde o lançamento da NFT');
+            return;
+        }
+
         if (!isConnected) {
             setMintError('Por favor, conecte sua wallet primeiro');
             return;
@@ -352,7 +356,7 @@ export default function Welcome() {
                                                     ) : (
                                                         <Button
                                                             onClick={handleMint}
-                                                            disabled={isMinting || contractLoading || quantity + userMintedCount > 5}
+                                                            disabled={isMinting || contractLoading || quantity + userMintedCount > 5 || !timeFinished}
                                                             className="fluorescent-button w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
                                                             size="lg"
                                                         >
