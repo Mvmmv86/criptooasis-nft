@@ -1,14 +1,39 @@
 import { useEffect, useState } from 'react';
 
-export function useCountdown({ initialDays = 0, initialHours = 0, initialMinutes = 0, initialSeconds = 0 }) {
+export function useCountdown() {
     const [timeLeft, setTimeLeft] = useState({
-        days: initialDays,
-        hours: initialHours,
-        minutes: initialMinutes,
-        seconds: initialSeconds,
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
     });
 
+    const [timeFinished, setTimeFinished] = useState(false);
+
     useEffect(() => {
+        const futureDate = new Date('2025-10-29T00:00:00');
+        const now = new Date();
+
+        const timeRemaining = futureDate.getTime() - now;
+
+        if (timeRemaining <= 0) {
+            setTimeFinished(true);
+
+            return ;
+        }
+
+        const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+        setTimeLeft({
+            days,
+            hours,
+            minutes,
+            seconds
+        });
+
         const timer = setInterval(() => {
             setTimeLeft(prev => {
                 let { days, hours, minutes, seconds } = prev;
@@ -28,6 +53,7 @@ export function useCountdown({ initialDays = 0, initialHours = 0, initialMinutes
                     minutes = 59;
                     seconds = 59;
                 } else {
+                    setTimeFinished(true);
                     clearInterval(timer); // stop if all reach 0
                 }
 
@@ -38,5 +64,8 @@ export function useCountdown({ initialDays = 0, initialHours = 0, initialMinutes
         return () => clearInterval(timer);
     }, []);
 
-    return timeLeft;
+    return {
+        timeLeft,
+        timeFinished
+    };
 }
