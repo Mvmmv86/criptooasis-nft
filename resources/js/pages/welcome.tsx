@@ -193,7 +193,7 @@ export default function Welcome() {
                                     size="lg"
                                     className="fluorescent-button bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-lg px-8 py-4 text-white font-bold fade-in-left" data-delay="0.8s"
                                 >
-                                    MINT AGORA - $300
+                                    MINT AGORA - 0.08 ETH
                                 </Button>
                                 <Button
                                     onClick={() => scrollToSection('about')}
