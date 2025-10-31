@@ -98,7 +98,6 @@ export default function Welcome() {
     };
 
     const totalCost = (Number(contractData.mintPrice) * quantity).toFixed(4);
-    const totalCostUSD = (300 * quantity).toFixed(2);
 
     return (
         <>
@@ -308,7 +307,6 @@ export default function Welcome() {
                                         <div className="border-t border-white/10 pt-6">
                                             <div className="flex justify-between items-center mb-4">
                                                 <span className="text-2xl font-bold">0.08 ETH</span>
-                                                <span className="text-white/70">≈ $300 USD</span>
                                             </div>
 
                                             <div className="space-y-4">
@@ -343,7 +341,6 @@ export default function Welcome() {
                                                         <span className="font-medium">Custo Total</span>
                                                         <div className="text-right">
                                                             <div className="font-bold">{totalCost} ETH</div>
-                                                            <div className="text-sm text-white/70">≈ ${totalCostUSD} USD</div>
                                                         </div>
                                                     </div>
 
