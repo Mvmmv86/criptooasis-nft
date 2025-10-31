@@ -9,7 +9,7 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
-// Route::get('/ranking', [RankingController::class, 'index'])->name('ranking');
+Route::get('/ranking', [RankingController::class, 'index'])->name('ranking');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');

@@ -31,7 +31,7 @@ const Navbar = ({ showScrollButtons = false, scrollToSection = null }) => {
                             <a href="/" className="hover:text-yellow-400 transition-colors">FAQ</a>
                         </>
                     )}
-                    {/* <a href="/ranking" className="hover:text-yellow-400 transition-colors">Ranking</a> */}
+                     <a href="/ranking" className="hover:text-yellow-400 transition-colors">Ranking</a>
                 </div>
 
                 <div className="flex items-center space-x-4">
