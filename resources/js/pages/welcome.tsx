@@ -56,10 +56,6 @@ export default function Welcome() {
     }
 
     const handleMint = async () => {
-        if (!timeFinished) {
-            setMintError('Por favor, aguarde o lançamento da NFT');
-            return;
-        }
 
         if (!isConnected) {
             setMintError('Por favor, conecte sua wallet primeiro');
@@ -353,7 +349,7 @@ export default function Welcome() {
                                                     ) : (
                                                         <Button
                                                             onClick={handleMint}
-                                                            disabled={isMinting || contractLoading || quantity + userMintedCount > 5 || !timeFinished}
+                                                            disabled={isMinting || contractLoading || quantity + userMintedCount > 5}
                                                             className="fluorescent-button w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
                                                             size="lg"
                                                         >

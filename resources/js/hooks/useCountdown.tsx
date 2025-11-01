@@ -11,28 +11,28 @@ export function useCountdown() {
     const [timeFinished, setTimeFinished] = useState(false);
 
     useEffect(() => {
-        const futureDate = new Date('2025-11-01T12:00:00');
-        const now = new Date();
+        // const futureDate = new Date('2025-11-01T12:00:00');
+        // const now = new Date();
+        //
+        // const timeRemaining = futureDate.getTime() - now;
+        //
+        // if (timeRemaining <= 0) {
+        //     setTimeFinished(true);
+        //
+        //     return ;
+        // }
+        //
+        // const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+        // const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        // const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+        // const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
 
-        const timeRemaining = futureDate.getTime() - now;
-
-        if (timeRemaining <= 0) {
-            setTimeFinished(true);
-
-            return ;
-        }
-
-        const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-
-        setTimeLeft({
-            days,
-            hours,
-            minutes,
-            seconds
-        });
+        // setTimeLeft({
+        //     days,
+        //     hours,
+        //     minutes,
+        //     seconds
+        // });
 
         const timer = setInterval(() => {
             setTimeLeft(prev => {
